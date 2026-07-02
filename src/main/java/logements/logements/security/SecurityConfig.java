@@ -73,6 +73,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/logements/*/reservations").authenticated()
                         .requestMatchers(HttpMethod.POST, "/api/logements").hasRole("HOTE")
+                        .requestMatchers(HttpMethod.PUT, "/api/logements/*").hasRole("HOTE")
+                        .requestMatchers(HttpMethod.DELETE, "/api/logements/*").hasRole("HOTE")
                         .requestMatchers(HttpMethod.POST, "/api/fichiers/**").hasRole("HOTE")
                         .anyRequest().authenticated()
                 )

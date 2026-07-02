@@ -30,5 +30,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/publier-logement/publier-logement.component').then((m) => m.PublierLogementComponent)
   },
+  {
+    path: 'logements/:id/modifier',
+    canActivate: [authGuard, hoteGuard],
+    loadComponent: () =>
+      import('./pages/publier-logement/publier-logement.component').then((m) => m.PublierLogementComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

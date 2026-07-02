@@ -57,6 +57,21 @@
 
           @if (estProprietaire()) {
             <p class="message-proprietaire">Vous êtes l'hôte de ce logement, vous ne pouvez pas le réserver.</p>
+
+            @if (erreur()) {
+              <p class="message-erreur">{{ erreur() }}</p>
+            }
+
+            <div class="actions-proprietaire">
+              <button type="button" class="bouton-modifier champ-pleine-largeur" (click)="modifier()">
+                <mat-icon>edit</mat-icon>
+                Modifier
+              </button>
+              <button type="button" class="bouton-supprimer champ-pleine-largeur" (click)="supprimer()" [disabled]="suppressionEnCours()">
+                <mat-icon>delete</mat-icon>
+                Supprimer
+              </button>
+            </div>
           } @else {
             <form [formGroup]="formulaire" (ngSubmit)="reserver()" class="formulaire-dates">
               <div class="ligne-dates">

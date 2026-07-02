@@ -84,6 +84,8 @@ export class LogementDetailComponent implements OnInit {
     return !!logement?.proprietaire && !!utilisateur && logement.proprietaire.id === utilisateur.id;
   });
 
+  readonly suppressionEnCours = signal(false);
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.logementService.obtenir(id).subscribe({
@@ -131,6 +133,45 @@ export class LogementDetailComponent implements OnInit {
           }
         }
       });
+  }
+
+  modifier(): void {
+    const logement = this.logement();
+    if (!logement) {
+      return;
+    }
+    this.router.navigate(['/logements', logement.id, 'modifier']);
+  }
+
+  supprimer(): void {
+    const logement = this.logement();
+    if (!logement) {
+      return;
+    }
+
+    const confirmation = confirm(`Supprimer définitivement "${logement.titre}" ? Cette action est irréversible.`);
+    if (!confirmation) {
+      return;
+    }
+
+    this.suppressionEnCours.set(true);
+    this.erreur.set(null);
+
+    this.logementService.supprimer(logement.id).subscribe({
+      next: () => {
+        this.suppressionEnCours.set(false);
+        this.snackBar.open('Logement supprimé', 'Fermer', { duration: 4000 });
+        this.router.navigate(['/']);
+      },
+      error: (err) => {
+        this.suppressionEnCours.set(false);
+        this.erreur.set(
+          err.status === 409
+            ? 'Impossible de supprimer ce logement : il a des réservations en cours ou à venir'
+            : 'Erreur lors de la suppression du logement'
+        );
+      }
+    });
   }
 
   private formatDate(date: Date): string {

@@ -50,4 +50,15 @@ public class LogementController {
         Logement cree = logementService.creer(logement, proprietaire);
         return ResponseEntity.status(HttpStatus.CREATED).body(cree);
     }
+
+    @PutMapping("/{id}")
+    public Logement modifier(@PathVariable Long id, @Valid @RequestBody Logement logement, Authentication authentication) {
+        return logementService.modifier(id, logement, authentication.getName());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> supprimer(@PathVariable Long id, Authentication authentication) {
+        logementService.supprimer(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
 }

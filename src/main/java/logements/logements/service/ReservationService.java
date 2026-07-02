@@ -4,7 +4,7 @@ import logements.logements.entity.Logement;
 import logements.logements.entity.Reservation;
 import logements.logements.entity.StatutReservation;
 import logements.logements.entity.Utilisateur;
-import logements.logements.exception.ReservationConflitException;
+import logements.logements.exception.ConflitException;
 import logements.logements.exception.ResourceNotFoundException;
 import logements.logements.repository.LogementRepository;
 import logements.logements.repository.ReservationRepository;
@@ -53,7 +53,7 @@ public class ReservationService {
                 .filter(r -> r.getStatut() != StatutReservation.ANNULEE)
                 .anyMatch(r -> !demande.getDateFin().isBefore(r.getDateDebut()) && !demande.getDateDebut().isAfter(r.getDateFin()));
         if (chevauchement) {
-            throw new ReservationConflitException("Le logement n'est pas disponible sur cette période");
+            throw new ConflitException("Le logement n'est pas disponible sur cette période");
         }
 
         long nuits = ChronoUnit.DAYS.between(demande.getDateDebut(), demande.getDateFin());

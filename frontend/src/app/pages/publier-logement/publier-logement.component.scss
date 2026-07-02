@@ -16,6 +16,12 @@ form {
   padding-top: 8px;
 }
 
+.conteneur-chargement {
+  display: flex;
+  justify-content: center;
+  padding: 48px 0;
+}
+
 .ligne {
   display: flex;
   gap: 12px;

@@ -265,7 +265,58 @@
 .message-proprietaire {
   color: var(--airbnb-texte-clair);
   font-size: 0.9rem;
-  margin: 0;
+  margin: 0 0 16px;
+}
+
+.actions-proprietaire {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bouton-modifier,
+.bouton-supprimer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  border-radius: var(--airbnb-rayon-pilule);
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  font-family: inherit;
+
+  mat-icon {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: default;
+  }
+}
+
+.bouton-modifier {
+  background: none;
+  border: 1px solid var(--airbnb-texte);
+  color: var(--airbnb-texte);
+
+  &:hover:not(:disabled) {
+    background: var(--airbnb-bordure-claire);
+  }
+}
+
+.bouton-supprimer {
+  background: none;
+  border: 1px solid #c62828;
+  color: #c62828;
+
+  &:hover:not(:disabled) {
+    background: #fdecea;
+  }
 }
 
 .conteneur-chargement {

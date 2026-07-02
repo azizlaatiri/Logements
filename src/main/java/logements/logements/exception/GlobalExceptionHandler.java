@@ -20,8 +20,8 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erreur(ex.getMessage()));
     }
 
-    @ExceptionHandler(ReservationConflitException.class)
-    public ResponseEntity<Map<String, Object>> handleConflit(ReservationConflitException ex) {
+    @ExceptionHandler(ConflitException.class)
+    public ResponseEntity<Map<String, Object>> handleConflit(ConflitException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(erreur(ex.getMessage()));
     }
 
