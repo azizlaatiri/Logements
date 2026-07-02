@@ -1,0 +1,48 @@
+<header class="entete">
+  <div class="entete-contenu">
+    <a routerLink="/" class="logo">
+      <mat-icon>home</mat-icon>
+      <span>logements</span>
+    </a>
+
+    <nav class="liens-centre">
+      @if (estHote()) {
+        <a routerLink="/publier" class="lien-hote">Mettre en location</a>
+      }
+    </nav>
+
+    <div class="zone-utilisateur">
+      @if (!estHote()) {
+        <a routerLink="/inscription" class="lien-hote lien-hote--desktop">Devenir hôte</a>
+      }
+
+      <div class="menu-utilisateur">
+        <button type="button" class="bouton-menu" (click)="basculerMenu()">
+          <mat-icon>menu</mat-icon>
+          @if (estConnecte()) {
+            <span class="avatar">{{ initiale() }}</span>
+          } @else {
+            <mat-icon class="avatar-anonyme">account_circle</mat-icon>
+          }
+        </button>
+
+        @if (menuOuvert()) {
+          <div class="panneau-menu" (click)="fermerMenu()">
+            @if (estConnecte()) {
+              <span class="panneau-salutation">Bonjour {{ utilisateur()?.prenom }}</span>
+              <a routerLink="/tableau-de-bord" class="panneau-lien">Mes réservations</a>
+              @if (estHote()) {
+                <a routerLink="/publier" class="panneau-lien">Publier un logement</a>
+              }
+              <div class="panneau-separateur"></div>
+              <button type="button" class="panneau-lien panneau-lien--bouton" (click)="deconnexion()">Déconnexion</button>
+            } @else {
+              <a routerLink="/connexion" class="panneau-lien panneau-lien--gras">Connexion</a>
+              <a routerLink="/inscription" class="panneau-lien">Inscription</a>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </div>
+</header>

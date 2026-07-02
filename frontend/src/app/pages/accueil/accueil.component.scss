@@ -1,0 +1,219 @@
+.hero {
+  padding: 56px 24px 40px;
+  text-align: center;
+  background: linear-gradient(180deg, #fff7f5 0%, #ffffff 100%);
+  border-bottom: 1px solid var(--airbnb-bordure-claire);
+
+  h1 {
+    margin: 0 0 8px;
+    font-size: 2.1rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+
+  .sous-titre {
+    margin: 0 0 32px;
+    color: var(--airbnb-texte-clair);
+    font-size: 1rem;
+  }
+}
+
+.pilule-recherche {
+  display: flex;
+  align-items: stretch;
+  max-width: 920px;
+  margin: 0 auto;
+  background: #ffffff;
+  border: 1px solid var(--airbnb-bordure);
+  border-radius: var(--airbnb-rayon-pilule);
+  box-shadow: var(--airbnb-ombre-carte);
+  padding: 6px;
+  flex-wrap: wrap;
+
+  @media (max-width: 720px) {
+    border-radius: 24px;
+  }
+}
+
+.segment {
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 8px 20px;
+  border-radius: var(--airbnb-rayon-pilule);
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s ease;
+  min-width: 130px;
+
+  &:hover {
+    background: var(--airbnb-bordure-claire);
+  }
+
+  label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--airbnb-texte);
+  }
+
+  input {
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: 0.9rem;
+    color: var(--airbnb-texte);
+    padding: 0;
+    font-family: inherit;
+    width: 100%;
+    cursor: pointer;
+
+    &::placeholder {
+      color: var(--airbnb-texte-clair);
+    }
+  }
+}
+
+.separateur {
+  width: 1px;
+  background: var(--airbnb-bordure);
+  margin: 8px 0;
+}
+
+.bouton-recherche {
+  flex: 0 0 auto;
+  width: 48px;
+  height: 48px;
+  align-self: center;
+  border-radius: 50%;
+  border: none;
+  background: var(--airbnb-rouge);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+
+  &:hover {
+    background: var(--airbnb-rouge-fonce);
+  }
+}
+
+.lien-reinitialiser {
+  margin-top: 16px;
+  background: none;
+  border: none;
+  color: var(--airbnb-texte-clair);
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+}
+
+.section-resultats {
+  padding-top: 32px;
+}
+
+.titre-resultats {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0 0 20px;
+}
+
+.conteneur-chargement {
+  display: flex;
+  justify-content: center;
+  padding: 64px 0;
+}
+
+.aucun-resultat {
+  text-align: center;
+  color: var(--airbnb-texte-clair);
+  padding: 64px 0;
+}
+
+.grille-logements {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 28px 20px;
+}
+
+.carte-logement {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+}
+
+.image-logement {
+  aspect-ratio: 1 / 1;
+  border-radius: var(--airbnb-rayon-lg);
+  overflow: hidden;
+  background: #f0f0f0;
+  margin-bottom: 12px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.25s ease;
+  }
+}
+
+.carte-logement:hover img {
+  transform: scale(1.04);
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffe4e9 0%, #ffd7dd 100%);
+
+  mat-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--airbnb-rouge);
+    opacity: 0.6;
+  }
+}
+
+.infos-logement {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.titre-logement {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.95rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ville-logement {
+  margin: 0;
+  color: var(--airbnb-texte-clair);
+  font-size: 0.9rem;
+}
+
+.details-logement {
+  margin: 0;
+  color: var(--airbnb-texte-clair);
+  font-size: 0.85rem;
+}
+
+.prix-logement {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+
+  strong {
+    font-weight: 700;
+  }
+}

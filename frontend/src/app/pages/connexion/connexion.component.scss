@@ -1,0 +1,29 @@
+.conteneur-formulaire {
+  display: flex;
+  justify-content: center;
+  padding-top: 32px;
+
+  mat-card {
+    width: 100%;
+    max-width: 420px;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 8px;
+}
+
+.message-erreur {
+  color: #c62828;
+  font-size: 0.9rem;
+  margin: 0 0 8px;
+}
+
+.lien-secondaire {
+  padding: 12px 16px;
+  margin: 0;
+  font-size: 0.9rem;
+}

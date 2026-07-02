@@ -1,0 +1,125 @@
+<div class="conteneur-page conteneur-formulaire">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Publier un logement</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="formulaire" (ngSubmit)="soumettre()">
+        <mat-form-field class="champ-pleine-largeur" appearance="outline">
+          <mat-label>Titre</mat-label>
+          <input matInput formControlName="titre" required />
+        </mat-form-field>
+
+        <div class="ligne">
+          <mat-form-field class="champ-pleine-largeur" appearance="outline">
+            <mat-label>Ville</mat-label>
+            <input matInput formControlName="ville" required [matAutocomplete]="autoVille" />
+            <mat-autocomplete #autoVille="matAutocomplete" [displayWith]="afficherVille" (optionSelected)="selectionnerVille($event)">
+              @for (suggestion of suggestionsVille(); track suggestion.libelle) {
+                <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <mat-form-field class="champ-pleine-largeur" appearance="outline">
+            <mat-label>Pays</mat-label>
+            <input matInput formControlName="pays" required [matAutocomplete]="autoPays" />
+            <mat-autocomplete #autoPays="matAutocomplete">
+              @for (pays of suggestionsPays(); track pays) {
+                <mat-option [value]="pays">{{ pays }}</mat-option>
+              }
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="champ-pleine-largeur" appearance="outline">
+          <mat-label>Adresse</mat-label>
+          <input matInput formControlName="adresse" [matAutocomplete]="autoAdresse" />
+          <mat-autocomplete #autoAdresse="matAutocomplete" [displayWith]="afficherAdresse" (optionSelected)="selectionnerAdresse($event)">
+            @for (suggestion of suggestionsAdresse(); track suggestion.libelle) {
+              <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
+            }
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <mat-form-field class="champ-pleine-largeur" appearance="outline">
+          <mat-label>Description</mat-label>
+          <textarea matInput formControlName="description" rows="3"></textarea>
+        </mat-form-field>
+
+        <div class="bloc-photos">
+          <p class="etiquette-photos">Photo de couverture (affichée sur la page d'accueil)</p>
+
+          <label class="zone-depot">
+            <input type="file" accept="image/*" (change)="selectionCouverture($event)" hidden />
+            @if (enCoursCouverture()) {
+              <mat-spinner diameter="24" />
+            } @else if (formulaire.controls.imageUrl.value) {
+              <img [src]="formulaire.controls.imageUrl.value" alt="Photo de couverture" class="apercu-couverture" />
+            } @else {
+              <mat-icon>add_photo_alternate</mat-icon>
+              <span>Choisir une photo sur mon ordinateur</span>
+            }
+          </label>
+        </div>
+
+        <div class="bloc-photos">
+          <p class="etiquette-photos">Catalogue de photos (affiché sur la page du logement)</p>
+
+          @if (photosCatalogue().length > 0) {
+            <div class="grille-apercus">
+              @for (photo of photosCatalogue(); track photo) {
+                <div class="tuile-apercu">
+                  <img [src]="photo" alt="Photo du logement" />
+                  <button type="button" class="bouton-supprimer-photo" (click)="supprimerPhoto($index)" aria-label="Supprimer cette photo">
+                    <mat-icon>close</mat-icon>
+                  </button>
+                </div>
+              }
+            </div>
+          }
+
+          <label class="lien-ajouter-photo">
+            <input type="file" accept="image/*" multiple (change)="selectionCatalogue($event)" hidden />
+            @if (enCoursCatalogue()) {
+              <mat-spinner diameter="18" />
+            } @else {
+              <mat-icon>add</mat-icon>
+            }
+            Ajouter des photos
+          </label>
+        </div>
+
+        <div class="ligne">
+          <mat-form-field appearance="outline">
+            <mat-label>Prix / nuit (€)</mat-label>
+            <input matInput type="number" formControlName="prixParNuit" required />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Chambres</mat-label>
+            <input matInput type="number" formControlName="nombreChambres" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Voyageurs max</mat-label>
+            <input matInput type="number" formControlName="nombreVoyageursMax" />
+          </mat-form-field>
+        </div>
+
+        @if (erreur()) {
+          <p class="message-erreur">{{ erreur() }}</p>
+        }
+
+        <button mat-raised-button color="primary" class="champ-pleine-largeur" type="submit" [disabled]="formulaire.invalid || enCours()">
+          @if (enCours()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            Publier
+          }
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

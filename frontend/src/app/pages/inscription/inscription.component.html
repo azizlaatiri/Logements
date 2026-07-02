@@ -1,0 +1,56 @@
+<div class="conteneur-page conteneur-formulaire">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Créer un compte</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="formulaire" (ngSubmit)="soumettre()">
+        <div class="ligne">
+          <mat-form-field class="champ-pleine-largeur" appearance="outline">
+            <mat-label>Prénom</mat-label>
+            <input matInput formControlName="prenom" required />
+          </mat-form-field>
+
+          <mat-form-field class="champ-pleine-largeur" appearance="outline">
+            <mat-label>Nom</mat-label>
+            <input matInput formControlName="nom" required />
+          </mat-form-field>
+        </div>
+
+        <mat-form-field class="champ-pleine-largeur" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" required />
+        </mat-form-field>
+
+        <mat-form-field class="champ-pleine-largeur" appearance="outline">
+          <mat-label>Mot de passe</mat-label>
+          <input matInput type="password" formControlName="motDePasse" required />
+          <mat-hint>8 caractères minimum</mat-hint>
+        </mat-form-field>
+
+        <p class="etiquette-role">Je m'inscris en tant que :</p>
+        <mat-button-toggle-group formControlName="role" class="champ-pleine-largeur">
+          <mat-button-toggle value="VOYAGEUR">Voyageur</mat-button-toggle>
+          <mat-button-toggle value="HOTE">Hôte</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        @if (erreur()) {
+          <p class="message-erreur">{{ erreur() }}</p>
+        }
+
+        <button mat-raised-button color="primary" class="champ-pleine-largeur bouton-soumettre" type="submit" [disabled]="formulaire.invalid || enCours()">
+          @if (enCours()) {
+            <mat-spinner diameter="20" />
+          } @else {
+            S'inscrire
+          }
+        </button>
+      </form>
+    </mat-card-content>
+
+    <mat-card-footer>
+      <p class="lien-secondaire">Déjà un compte ? <a routerLink="/connexion">Se connecter</a></p>
+    </mat-card-footer>
+  </mat-card>
+</div>

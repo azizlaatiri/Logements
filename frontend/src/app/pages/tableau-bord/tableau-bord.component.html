@@ -1,0 +1,41 @@
+<div class="conteneur-page">
+  <h1 class="titre-page">Mes réservations</h1>
+
+  @if (chargement()) {
+    <div class="conteneur-chargement">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else if (reservations().length === 0) {
+    <p class="aucun-resultat">Vous n'avez aucune réservation. <a routerLink="/">Découvrir des logements</a></p>
+  } @else {
+    <div class="liste-reservations">
+      @for (r of reservations(); track r.id) {
+        <div class="carte-reservation">
+          <div class="image-reservation">
+            @if (r.logement.imageUrl) {
+              <img [src]="r.logement.imageUrl" [alt]="r.logement.titre" />
+            } @else {
+              <div class="image-placeholder">
+                <mat-icon>home</mat-icon>
+              </div>
+            }
+          </div>
+
+          <div class="infos-reservation">
+            <div class="entete-reservation">
+              <a [routerLink]="['/logements', r.logement.id]" class="titre-reservation">{{ r.logement.titre }}</a>
+              <span class="badge" [class]="'badge-' + r.statut.toLowerCase()">{{ r.statut }}</span>
+            </div>
+            <p class="ville-reservation">{{ r.logement.ville }}</p>
+            <p class="dates-reservation">{{ r.dateDebut }} → {{ r.dateFin }}</p>
+            <p class="prix-reservation">{{ r.prixTotal }} € au total</p>
+
+            @if (r.statut !== 'ANNULEE') {
+              <button type="button" class="lien-annuler" (click)="annuler(r)">Annuler la réservation</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -1,0 +1,97 @@
+<section class="hero">
+  <h1>Trouvez votre prochain séjour</h1>
+  <p class="sous-titre">Logements, appartements et maisons partout où vous voulez aller</p>
+
+  <form [formGroup]="formulaireRecherche" (ngSubmit)="rechercher()" class="pilule-recherche">
+    <div class="segment">
+      <label>Où</label>
+      <input formControlName="ville" placeholder="Rechercher une destination" [matAutocomplete]="autoVille" />
+      <mat-autocomplete #autoVille="matAutocomplete" [displayWith]="afficherVille" (optionSelected)="selectionnerVille($event)">
+        @for (suggestion of suggestionsVille(); track suggestion.libelle) {
+          <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
+        }
+      </mat-autocomplete>
+    </div>
+
+    <div class="separateur"></div>
+
+    <div class="segment">
+      <label>Pays</label>
+      <input formControlName="pays" placeholder="N'importe où" [matAutocomplete]="autoPays" />
+      <mat-autocomplete #autoPays="matAutocomplete">
+        @for (pays of suggestionsPays(); track pays) {
+          <mat-option [value]="pays">{{ pays }}</mat-option>
+        }
+      </mat-autocomplete>
+    </div>
+
+    <div class="separateur"></div>
+
+    <div class="segment" (click)="pickerDebut.open()">
+      <label>Arrivée</label>
+      <input
+        [matDatepicker]="pickerDebut"
+        formControlName="dateDebut"
+        placeholder="Quand ?"
+        readonly
+      />
+      <mat-datepicker #pickerDebut></mat-datepicker>
+    </div>
+
+    <div class="separateur"></div>
+
+    <div class="segment" (click)="pickerFin.open()">
+      <label>Départ</label>
+      <input
+        [matDatepicker]="pickerFin"
+        formControlName="dateFin"
+        placeholder="Quand ?"
+        readonly
+      />
+      <mat-datepicker #pickerFin></mat-datepicker>
+    </div>
+
+    <button type="submit" class="bouton-recherche" aria-label="Rechercher">
+      <mat-icon>search</mat-icon>
+    </button>
+  </form>
+
+  @if (formulaireRecherche.value.ville || formulaireRecherche.value.pays || formulaireRecherche.value.dateDebut) {
+    <button type="button" class="lien-reinitialiser" (click)="reinitialiser()">Réinitialiser la recherche</button>
+  }
+</section>
+
+<section class="conteneur-page section-resultats">
+  @if (chargement()) {
+    <div class="conteneur-chargement">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else if (logements().length === 0) {
+    <p class="aucun-resultat">Aucun logement trouvé.</p>
+  } @else {
+    <h2 class="titre-resultats">{{ logements().length }} logement(s) disponible(s)</h2>
+    <div class="grille-logements">
+      @for (logement of logements(); track logement.id) {
+        <a class="carte-logement" [routerLink]="['/logements', logement.id]">
+          <div class="image-logement">
+            @if (logement.imageUrl) {
+              <img [src]="logement.imageUrl" [alt]="logement.titre" loading="lazy" />
+            } @else {
+              <div class="image-placeholder">
+                <mat-icon>home</mat-icon>
+              </div>
+            }
+          </div>
+          <div class="infos-logement">
+            <p class="titre-logement">{{ logement.titre }}</p>
+            <p class="ville-logement">{{ logement.ville }}@if (logement.pays) {, {{ logement.pays }}}</p>
+            @if (logement.nombreChambres) {
+              <p class="details-logement">{{ logement.nombreChambres }} chambre(s) · {{ logement.nombreVoyageursMax }} voyageurs max</p>
+            }
+            <p class="prix-logement"><strong>{{ logement.prixParNuit }} €</strong> / nuit</p>
+          </div>
+        </a>
+      }
+    </div>
+  }
+</section>

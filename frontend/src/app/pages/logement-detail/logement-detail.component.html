@@ -1,0 +1,105 @@
+<div class="conteneur-page">
+@if (chargement()) {
+  <div class="conteneur-chargement">
+    <mat-spinner diameter="40" />
+  </div>
+} @else {
+  @if (logement(); as logement) {
+    <h1 class="titre-page">{{ logement.titre }}</h1>
+    <p class="sous-titre-page">{{ logement.ville }} @if (logement.pays) { , {{ logement.pays }} } @if (logement.adresse) { · {{ logement.adresse }} }</p>
+
+    @if (galeriePhotos().length === 0) {
+      <div class="image-hero">
+        <div class="image-placeholder">
+          <mat-icon>home</mat-icon>
+        </div>
+      </div>
+    } @else if (galeriePhotos().length === 1) {
+      <div class="image-hero">
+        <img [src]="galeriePhotos()[0]" [alt]="logement.titre" />
+      </div>
+    } @else {
+      <div class="galerie-photos" [class]="'galerie-photos--' + tailleGalerie()">
+        @for (photo of galeriePhotos().slice(0, 5); track $index) {
+          <div class="tuile-photo">
+            <img [src]="photo" [alt]="logement.titre + ' photo ' + ($index + 1)" />
+            @if ($index === 4 && galeriePhotos().length > 5) {
+              <div class="surcouche-plus">+{{ galeriePhotos().length - 5 }}</div>
+            }
+          </div>
+        }
+      </div>
+    }
+
+    <div class="mise-en-page">
+      <div class="colonne-infos">
+        @if (logement.proprietaire) {
+          <div class="ligne-hote">
+            <span class="avatar-hote">{{ logement.proprietaire.prenom.charAt(0) }}</span>
+            <div>
+              <p class="hote-nom">Logement proposé par {{ logement.proprietaire.prenom }} {{ logement.proprietaire.nom }}</p>
+              @if (logement.nombreVoyageursMax) {
+                <p class="hote-capacite">{{ logement.nombreVoyageursMax }} voyageurs max @if (logement.nombreChambres) { · {{ logement.nombreChambres }} chambre(s) }</p>
+              }
+            </div>
+          </div>
+        }
+
+        @if (logement.description) {
+          <div class="separateur-horizontal"></div>
+          <p class="description">{{ logement.description }}</p>
+        }
+      </div>
+
+      <div class="colonne-reservation">
+        <div class="carte-reservation">
+          <p class="prix-carte"><strong>{{ logement.prixParNuit }} €</strong> <span>/ nuit</span></p>
+
+          @if (estProprietaire()) {
+            <p class="message-proprietaire">Vous êtes l'hôte de ce logement, vous ne pouvez pas le réserver.</p>
+          } @else {
+            <form [formGroup]="formulaire" (ngSubmit)="reserver()" class="formulaire-dates">
+              <div class="ligne-dates">
+                <div class="champ-date" (click)="pickerDebut.open()">
+                  <label>ARRIVÉE</label>
+                  <input [matDatepicker]="pickerDebut" formControlName="dateDebut" [min]="today" placeholder="Ajouter une date" readonly />
+                  <mat-datepicker #pickerDebut></mat-datepicker>
+                </div>
+                <div class="champ-date" (click)="pickerFin.open()">
+                  <label>DÉPART</label>
+                  <input [matDatepicker]="pickerFin" formControlName="dateFin" [min]="today" placeholder="Ajouter une date" readonly />
+                  <mat-datepicker #pickerFin></mat-datepicker>
+                </div>
+              </div>
+
+              @if (erreur()) {
+                <p class="message-erreur">{{ erreur() }}</p>
+              }
+
+              <button type="submit" class="bouton-airbnb champ-pleine-largeur bouton-reserver" [disabled]="formulaire.invalid || enCoursReservation()">
+                {{ estConnecte() ? 'Réserver' : 'Se connecter pour réserver' }}
+              </button>
+
+              @if (nuits() > 0) {
+                <div class="recap-prix">
+                  <div class="ligne-recap">
+                    <span>{{ logement.prixParNuit }} € × {{ nuits() }} nuit(s)</span>
+                    <span>{{ prixTotal() }} €</span>
+                  </div>
+                  <div class="separateur-horizontal"></div>
+                  <div class="ligne-recap ligne-recap--total">
+                    <span>Total</span>
+                    <span>{{ prixTotal() }} €</span>
+                  </div>
+                </div>
+              }
+            </form>
+          }
+        </div>
+      </div>
+    </div>
+  } @else {
+    <p class="aucun-resultat">Logement introuvable.</p>
+  }
+}
+</div>
