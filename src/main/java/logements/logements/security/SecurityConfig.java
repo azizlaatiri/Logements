@@ -68,6 +68,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/renvoyer-verification").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/verifier-telephone").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/api/auth/renvoyer-code-telephone").authenticated()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/logements/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()

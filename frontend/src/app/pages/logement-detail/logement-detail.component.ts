@@ -126,8 +126,8 @@ export class LogementDetailComponent implements OnInit {
           this.enCoursReservation.set(false);
           if (err.status === 409) {
             this.erreur.set("Ce logement n'est pas disponible sur cette période");
-          } else if (err.status === 403) {
-            this.erreur.set('Vous ne pouvez pas réserver votre propre logement');
+          } else if (err.status === 403 && err.error?.message) {
+            this.erreur.set(err.error.message);
           } else {
             this.erreur.set('Erreur lors de la réservation');
           }

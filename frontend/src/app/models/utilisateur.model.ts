@@ -6,6 +6,9 @@ export interface Utilisateur {
   prenom: string;
   email: string;
   role: Role;
+  emailVerifie: boolean;
+  telephone?: string;
+  telephoneVerifie: boolean;
 }
 
 export interface AuthResponse {
@@ -19,6 +22,7 @@ export interface InscriptionRequest {
   email: string;
   motDePasse: string;
   role: Role;
+  telephone?: string;
 }
 
 export interface LoginRequest {

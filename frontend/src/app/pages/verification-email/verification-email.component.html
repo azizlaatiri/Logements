@@ -1,0 +1,22 @@
+<div class="conteneur-page conteneur-verification">
+  <div class="carte-verification">
+    @switch (statut()) {
+      @case ('chargement') {
+        <mat-spinner diameter="40" />
+        <p>Vérification de votre email...</p>
+      }
+      @case ('succes') {
+        <mat-icon class="icone-succes">check_circle</mat-icon>
+        <h1>Email vérifié !</h1>
+        <p>Votre adresse email a bien été confirmée. Vous pouvez maintenant réserver et publier des logements.</p>
+        <a mat-raised-button color="primary" routerLink="/">Retour à l'accueil</a>
+      }
+      @case ('erreur') {
+        <mat-icon class="icone-erreur">error</mat-icon>
+        <h1>Échec de la vérification</h1>
+        <p>{{ messageErreur() }}</p>
+        <a mat-raised-button color="primary" routerLink="/">Retour à l'accueil</a>
+      }
+    }
+  </div>
+</div>

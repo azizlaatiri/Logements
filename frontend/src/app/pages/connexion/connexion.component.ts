@@ -8,6 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { BoutonGoogleComponent } from '../../shared/bouton-google/bouton-google.component';
 
 @Component({
   selector: 'app-connexion',
@@ -20,7 +21,8 @@ import { AuthService } from '../../core/auth.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    BoutonGoogleComponent
   ],
   templateUrl: './connexion.component.html',
   styleUrl: './connexion.component.scss'
@@ -37,9 +39,11 @@ export class ConnexionComponent {
 
   readonly enCours = signal(false);
   readonly erreur = signal<string | null>(null);
+  readonly googleDisponible = signal(true);
 
   soumettre(): void {
     if (this.formulaire.invalid) {
+      this.formulaire.markAllAsTouched();
       return;
     }
 
@@ -55,6 +59,22 @@ export class ConnexionComponent {
       error: () => {
         this.enCours.set(false);
         this.erreur.set('Email ou mot de passe incorrect');
+      }
+    });
+  }
+
+  connexionGoogle(idToken: string): void {
+    this.enCours.set(true);
+    this.erreur.set(null);
+
+    this.authService.connexionGoogle(idToken).subscribe({
+      next: () => {
+        this.enCours.set(false);
+        this.router.navigate(['/']);
+      },
+      error: () => {
+        this.enCours.set(false);
+        this.erreur.set('Erreur lors de la connexion avec Google');
       }
     });
   }

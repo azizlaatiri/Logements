@@ -9,11 +9,19 @@
         <mat-form-field class="champ-pleine-largeur" appearance="outline">
           <mat-label>Email</mat-label>
           <input matInput type="email" formControlName="email" required />
+          @if (formulaire.controls.email.hasError('required')) {
+            <mat-error>L'email est requis.</mat-error>
+          } @else if (formulaire.controls.email.hasError('email')) {
+            <mat-error>Adresse email invalide.</mat-error>
+          }
         </mat-form-field>
 
         <mat-form-field class="champ-pleine-largeur" appearance="outline">
           <mat-label>Mot de passe</mat-label>
           <input matInput type="password" formControlName="motDePasse" required />
+          @if (formulaire.controls.motDePasse.hasError('required')) {
+            <mat-error>Le mot de passe est requis.</mat-error>
+          }
         </mat-form-field>
 
         @if (erreur()) {
@@ -28,6 +36,11 @@
           }
         </button>
       </form>
+
+      @if (googleDisponible()) {
+        <div class="separateur-ou"><span>ou</span></div>
+        <app-bouton-google (identifiant)="connexionGoogle($event)" (indisponible)="googleDisponible.set(false)" />
+      }
     </mat-card-content>
 
     <mat-card-footer>

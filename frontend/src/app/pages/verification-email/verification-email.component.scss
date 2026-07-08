@@ -1,0 +1,41 @@
+.conteneur-verification {
+  display: flex;
+  justify-content: center;
+  padding-top: 64px;
+}
+
+.carte-verification {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  max-width: 420px;
+  padding: 40px 24px;
+  border: 1px solid var(--airbnb-bordure-claire);
+  border-radius: var(--airbnb-rayon-lg);
+
+  h1 {
+    font-size: 1.3rem;
+    margin: 0;
+  }
+
+  p {
+    color: var(--airbnb-texte-clair);
+    margin: 0 0 8px;
+  }
+}
+
+.icone-succes {
+  color: #1e7e34;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+.icone-erreur {
+  color: #c62828;
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}

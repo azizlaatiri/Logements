@@ -49,6 +49,16 @@ public class ReservationService {
                     "Vous ne pouvez pas réserver votre propre logement");
         }
 
+        if (!voyageur.getEmailVerifie()) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Veuillez vérifier votre adresse email avant de réserver");
+        }
+
+        if (voyageur.getTelephone() != null && !voyageur.getTelephoneVerifie()) {
+            throw new org.springframework.security.access.AccessDeniedException(
+                    "Veuillez vérifier votre numéro de téléphone avant de réserver");
+        }
+
         boolean chevauchement = logement.getReservations().stream()
                 .filter(r -> r.getStatut() != StatutReservation.ANNULEE)
                 .anyMatch(r -> !demande.getDateFin().isBefore(r.getDateDebut()) && !demande.getDateDebut().isAfter(r.getDateFin()));

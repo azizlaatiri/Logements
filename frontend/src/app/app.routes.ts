@@ -15,6 +15,11 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/inscription/inscription.component').then((m) => m.InscriptionComponent)
   },
   {
+    path: 'verifier-email',
+    loadComponent: () =>
+      import('./pages/verification-email/verification-email.component').then((m) => m.VerificationEmailComponent)
+  },
+  {
     path: 'logements/:id',
     loadComponent: () =>
       import('./pages/logement-detail/logement-detail.component').then((m) => m.LogementDetailComponent)

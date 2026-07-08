@@ -123,3 +123,20 @@ body {
   border-radius: var(--airbnb-rayon-pilule) !important;
   overflow: hidden;
 }
+
+.separateur-ou {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--airbnb-texte-clair);
+  font-size: 0.8rem;
+
+  &::before,
+  &::after {
+    content: '';
+    flex: 1 1 auto;
+    height: 1px;
+    background: var(--airbnb-bordure-claire);
+  }
+}

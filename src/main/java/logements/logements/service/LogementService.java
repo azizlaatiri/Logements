@@ -31,6 +31,12 @@ public class LogementService {
     }
 
     public Logement creer(Logement logement, Utilisateur proprietaire) {
+        if (!proprietaire.getEmailVerifie()) {
+            throw new AccessDeniedException("Veuillez vérifier votre adresse email avant de publier un logement");
+        }
+        if (proprietaire.getTelephone() != null && !proprietaire.getTelephoneVerifie()) {
+            throw new AccessDeniedException("Veuillez vérifier votre numéro de téléphone avant de publier un logement");
+        }
         logement.setProprietaire(proprietaire);
         return logementRepository.save(logement);
     }

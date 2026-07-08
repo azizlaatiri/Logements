@@ -40,7 +40,8 @@
       "Bash(node e2e.js)",
       "Bash(taskkill //F //IM node.exe)",
       "Bash(node e2e-photos.js)",
-      "Bash(echo \"BACKEND_EXIT=$?\")"
+      "Bash(echo \"BACKEND_EXIT=$?\")",
+      "Bash(npx -y @angular/cli@19 generate component pages/verification-email --skip-tests --flat=false)"
     ]
   }
 }

@@ -40,14 +40,14 @@ export class PublierLogementComponent implements OnInit {
   private readonly router = inject(Router);
 
   readonly formulaire = this.fb.group({
-    titre: ['', Validators.required],
-    ville: ['', Validators.required],
+    titre: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(100)]],
+    ville: ['', [Validators.required, Validators.minLength(2)]],
     adresse: [''],
     pays: ['', Validators.required],
-    description: [''],
-    prixParNuit: [null as number | null, [Validators.required, Validators.min(1)]],
-    nombreChambres: [null as number | null, Validators.min(1)],
-    nombreVoyageursMax: [null as number | null, Validators.min(1)],
+    description: ['', Validators.maxLength(2000)],
+    prixParNuit: [null as number | null, [Validators.required, Validators.min(1), Validators.max(100000)]],
+    nombreChambres: [null as number | null, [Validators.min(1), Validators.max(50)]],
+    nombreVoyageursMax: [null as number | null, [Validators.min(1), Validators.max(50)]],
     imageUrl: ['']
   });
 
@@ -201,6 +201,7 @@ export class PublierLogementComponent implements OnInit {
 
   soumettre(): void {
     if (this.formulaire.invalid) {
+      this.formulaire.markAllAsTouched();
       return;
     }
 
@@ -229,9 +230,13 @@ export class PublierLogementComponent implements OnInit {
         this.enCours.set(false);
         this.router.navigate(['/logements', logement.id]);
       },
-      error: () => {
+      error: (err) => {
         this.enCours.set(false);
-        this.erreur.set(this.modeEdition() ? 'Erreur lors de la modification du logement' : 'Erreur lors de la création du logement');
+        if (err.status === 403 && err.error?.message) {
+          this.erreur.set(err.error.message);
+        } else {
+          this.erreur.set(this.modeEdition() ? 'Erreur lors de la modification du logement' : 'Erreur lors de la création du logement');
+        }
       }
     });
   }

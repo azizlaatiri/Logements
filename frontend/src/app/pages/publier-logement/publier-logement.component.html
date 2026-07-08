@@ -14,6 +14,13 @@
         <mat-form-field class="champ-pleine-largeur" appearance="outline">
           <mat-label>Titre</mat-label>
           <input matInput formControlName="titre" required />
+          @if (formulaire.controls.titre.hasError('required')) {
+            <mat-error>Le titre est requis.</mat-error>
+          } @else if (formulaire.controls.titre.hasError('minlength')) {
+            <mat-error>5 caractères minimum.</mat-error>
+          } @else if (formulaire.controls.titre.hasError('maxlength')) {
+            <mat-error>100 caractères maximum.</mat-error>
+          }
         </mat-form-field>
 
         <div class="ligne">
@@ -25,6 +32,11 @@
                 <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
               }
             </mat-autocomplete>
+            @if (formulaire.controls.ville.hasError('required')) {
+              <mat-error>La ville est requise.</mat-error>
+            } @else if (formulaire.controls.ville.hasError('minlength')) {
+              <mat-error>2 caractères minimum.</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field class="champ-pleine-largeur" appearance="outline">
@@ -35,6 +47,9 @@
                 <mat-option [value]="pays">{{ pays }}</mat-option>
               }
             </mat-autocomplete>
+            @if (formulaire.controls.pays.hasError('required')) {
+              <mat-error>Le pays est requis.</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -50,7 +65,12 @@
 
         <mat-form-field class="champ-pleine-largeur" appearance="outline">
           <mat-label>Description</mat-label>
-          <textarea matInput formControlName="description" rows="3"></textarea>
+          <textarea matInput formControlName="description" rows="3" maxlength="2000"></textarea>
+          @if (formulaire.controls.description.hasError('maxlength')) {
+            <mat-error>2000 caractères maximum.</mat-error>
+          } @else {
+            <mat-hint align="end">{{ formulaire.controls.description.value?.length ?? 0 }}/2000</mat-hint>
+          }
         </mat-form-field>
 
         <div class="bloc-photos">
@@ -99,17 +119,34 @@
         <div class="ligne">
           <mat-form-field appearance="outline">
             <mat-label>Prix / nuit (€)</mat-label>
-            <input matInput type="number" formControlName="prixParNuit" required />
+            <input matInput type="number" formControlName="prixParNuit" required min="1" max="100000" />
+            @if (formulaire.controls.prixParNuit.hasError('required')) {
+              <mat-error>Le prix est requis.</mat-error>
+            } @else if (formulaire.controls.prixParNuit.hasError('min')) {
+              <mat-error>Doit être supérieur à 0.</mat-error>
+            } @else if (formulaire.controls.prixParNuit.hasError('max')) {
+              <mat-error>100 000 € maximum.</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Chambres</mat-label>
-            <input matInput type="number" formControlName="nombreChambres" />
+            <input matInput type="number" formControlName="nombreChambres" min="1" max="50" />
+            @if (formulaire.controls.nombreChambres.hasError('min')) {
+              <mat-error>Doit être supérieur à 0.</mat-error>
+            } @else if (formulaire.controls.nombreChambres.hasError('max')) {
+              <mat-error>50 maximum.</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Voyageurs max</mat-label>
-            <input matInput type="number" formControlName="nombreVoyageursMax" />
+            <input matInput type="number" formControlName="nombreVoyageursMax" min="1" max="50" />
+            @if (formulaire.controls.nombreVoyageursMax.hasError('min')) {
+              <mat-error>Doit être supérieur à 0.</mat-error>
+            } @else if (formulaire.controls.nombreVoyageursMax.hasError('max')) {
+              <mat-error>50 maximum.</mat-error>
+            }
           </mat-form-field>
         </div>
 

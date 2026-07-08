@@ -2,8 +2,11 @@ package logements.logements.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,12 +27,15 @@ public class Logement {
     private Long id;
 
     @NotBlank
+    @Size(min = 5, max = 100)
     private String titre;
 
+    @Size(max = 2000)
     @Column(length = 2000)
     private String description;
 
     @NotBlank
+    @Size(min = 2)
     private String ville;
 
     private String adresse;
@@ -38,10 +44,13 @@ public class Logement {
     private String pays;
 
     @Positive
+    @DecimalMax(value = "100000")
     private BigDecimal prixParNuit;
 
+    @Max(50)
     private Integer nombreChambres;
 
+    @Max(50)
     private Integer nombreVoyageursMax;
 
     @Column(length = 2048)

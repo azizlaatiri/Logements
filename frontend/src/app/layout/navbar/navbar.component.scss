@@ -152,3 +152,57 @@
   background: var(--airbnb-bordure-claire);
   margin: 8px 0;
 }
+
+.banniere-verification {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 10px 24px;
+  background: #fff8e1;
+  border-bottom: 1px solid #f0e0a8;
+  font-size: 0.85rem;
+  color: #7a5c00;
+  text-align: center;
+
+  .champ-code {
+    flex-shrink: 0;
+    width: 130px;
+    padding: 4px 10px;
+    border: 1px solid #7a5c00;
+    border-radius: var(--airbnb-rayon-pilule);
+    background: #ffffff;
+    font-size: 0.85rem;
+    font-family: inherit;
+    letter-spacing: 0.15em;
+    text-align: center;
+
+    &:focus {
+      outline: none;
+      border-color: var(--airbnb-texte);
+    }
+  }
+
+  button {
+    flex-shrink: 0;
+    background: none;
+    border: 1px solid #7a5c00;
+    border-radius: var(--airbnb-rayon-pilule);
+    padding: 4px 14px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    color: #7a5c00;
+    cursor: pointer;
+    font-family: inherit;
+
+    &:hover:not(:disabled) {
+      background: #f0e0a8;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: default;
+    }
+  }
+}
