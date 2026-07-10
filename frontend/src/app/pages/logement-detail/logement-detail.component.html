@@ -67,6 +67,10 @@
                 <mat-icon>edit</mat-icon>
                 Modifier
               </button>
+              <button type="button" class="bouton-modifier champ-pleine-largeur" (click)="gererDisponibilites()">
+                <mat-icon>event_busy</mat-icon>
+                Gérer les disponibilités
+              </button>
               <button type="button" class="bouton-supprimer champ-pleine-largeur" (click)="supprimer()" [disabled]="suppressionEnCours()">
                 <mat-icon>delete</mat-icon>
                 Supprimer
@@ -87,12 +91,34 @@
                 </div>
               </div>
 
+              <label class="case-recurrence">
+                <input type="checkbox" [checked]="recurrenceActivee()" (change)="basculerRecurrence()" />
+                Réservation récurrente (répéter cette période)
+              </label>
+
+              @if (recurrenceActivee()) {
+                <div class="ligne-recurrence">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Fréquence</mat-label>
+                    <mat-select formControlName="frequence">
+                      <mat-option value="HEBDOMADAIRE">Toutes les semaines</mat-option>
+                      <mat-option value="MENSUELLE">Tous les mois</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+
+                  <mat-form-field appearance="outline">
+                    <mat-label>Nombre d'occurrences</mat-label>
+                    <input matInput type="number" formControlName="nombreOccurrences" min="2" max="52" />
+                  </mat-form-field>
+                </div>
+              }
+
               @if (erreur()) {
                 <p class="message-erreur">{{ erreur() }}</p>
               }
 
               <button type="submit" class="bouton-airbnb champ-pleine-largeur bouton-reserver" [disabled]="formulaire.invalid || enCoursReservation()">
-                {{ estConnecte() ? 'Réserver' : 'Se connecter pour réserver' }}
+                {{ estConnecte() ? (recurrenceActivee() ? 'Réserver toutes les occurrences' : 'Réserver') : 'Se connecter pour réserver' }}
               </button>
 
               @if (nuits() > 0) {

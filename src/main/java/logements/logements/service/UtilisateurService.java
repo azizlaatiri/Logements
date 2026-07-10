@@ -11,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,15 +21,12 @@ public class UtilisateurService {
     private final UtilisateurRepository utilisateurRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService;
-    private final SmsService smsService;
-    private final SecureRandom secureRandom = new SecureRandom();
 
     public UtilisateurService(UtilisateurRepository utilisateurRepository, PasswordEncoder passwordEncoder,
-                               EmailService emailService, SmsService smsService) {
+                               EmailService emailService) {
         this.utilisateurRepository = utilisateurRepository;
         this.passwordEncoder = passwordEncoder;
         this.emailService = emailService;
-        this.smsService = smsService;
     }
 
     public List<Utilisateur> findAll() {
@@ -50,17 +46,8 @@ public class UtilisateurService {
         utilisateur.setEmailVerifie(false);
         genererTokenEmail(utilisateur);
 
-        boolean avecTelephone = utilisateur.getTelephone() != null && !utilisateur.getTelephone().isBlank();
-        if (avecTelephone) {
-            utilisateur.setTelephoneVerifie(false);
-            genererCodeTelephone(utilisateur);
-        }
-
         Utilisateur cree = utilisateurRepository.save(utilisateur);
         emailService.envoyerEmailVerification(cree.getEmail(), cree.getPrenom(), cree.getTokenVerification());
-        if (avecTelephone) {
-            smsService.envoyerCodeVerification(cree.getTelephone(), cree.getCodeVerificationTelephone());
-        }
         return cree;
     }
 
@@ -89,48 +76,9 @@ public class UtilisateurService {
         emailService.envoyerEmailVerification(utilisateur.getEmail(), utilisateur.getPrenom(), utilisateur.getTokenVerification());
     }
 
-    public Utilisateur verifierTelephone(String email, String code) {
-        Utilisateur utilisateur = findByEmail(email);
-
-        if (utilisateur.getTelephone() == null) {
-            throw new ConflitException("Aucun numéro de téléphone associé à ce compte");
-        }
-        if (utilisateur.getCodeVerificationTelephone() == null || !utilisateur.getCodeVerificationTelephone().equals(code)) {
-            throw new ConflitException("Code de vérification incorrect");
-        }
-        if (utilisateur.getCodeVerificationTelephoneExpiration() == null
-                || utilisateur.getCodeVerificationTelephoneExpiration().isBefore(LocalDateTime.now())) {
-            throw new ConflitException("Ce code a expiré, demandez-en un nouveau");
-        }
-
-        utilisateur.setTelephoneVerifie(true);
-        utilisateur.setCodeVerificationTelephone(null);
-        utilisateur.setCodeVerificationTelephoneExpiration(null);
-        return utilisateurRepository.save(utilisateur);
-    }
-
-    public void renvoyerCodeTelephone(String email) {
-        Utilisateur utilisateur = findByEmail(email);
-        if (utilisateur.getTelephone() == null) {
-            throw new ConflitException("Aucun numéro de téléphone associé à ce compte");
-        }
-        if (utilisateur.getTelephoneVerifie()) {
-            throw new ConflitException("Ce téléphone est déjà vérifié");
-        }
-        genererCodeTelephone(utilisateur);
-        utilisateurRepository.save(utilisateur);
-        smsService.envoyerCodeVerification(utilisateur.getTelephone(), utilisateur.getCodeVerificationTelephone());
-    }
-
     private void genererTokenEmail(Utilisateur utilisateur) {
         utilisateur.setTokenVerification(UUID.randomUUID().toString());
         utilisateur.setTokenVerificationExpiration(LocalDateTime.now().plusHours(24));
-    }
-
-    private void genererCodeTelephone(Utilisateur utilisateur) {
-        String code = String.format("%06d", secureRandom.nextInt(1_000_000));
-        utilisateur.setCodeVerificationTelephone(code);
-        utilisateur.setCodeVerificationTelephoneExpiration(LocalDateTime.now().plusMinutes(10));
     }
 
     public Utilisateur findByEmail(String email) {

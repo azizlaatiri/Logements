@@ -1,3 +1,4 @@
+import { FrequenceRecurrence } from './disponibilite.model';
 import { Logement } from './logement.model';
 import { Utilisateur } from './utilisateur.model';
 
@@ -12,9 +13,17 @@ export interface Reservation {
   prixTotal: number;
   statut: StatutReservation;
   dateCreation: string;
+  groupeRecurrenceId?: string;
 }
 
 export interface NouvelleReservation {
   dateDebut: string;
   dateFin: string;
+}
+
+export interface NouvelleReservationRecurrente {
+  dateDebut: string;
+  dateFin: string;
+  frequence: FrequenceRecurrence;
+  nombreOccurrences: number;
 }

@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { AbstractControl, FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
@@ -35,11 +35,15 @@ function motsDePasseIdentiquesValidator(groupe: AbstractControl): ValidationErro
   templateUrl: './inscription.component.html',
   styleUrl: './inscription.component.scss'
 })
-export class InscriptionComponent {
+export class InscriptionComponent implements OnInit {
   private readonly fb = inject(FormBuilder);
   private readonly authService = inject(AuthService);
   private readonly recaptchaService = inject(RecaptchaService);
   private readonly router = inject(Router);
+
+  ngOnInit(): void {
+    this.recaptchaService.precharger();
+  }
 
   readonly formulaire = this.fb.group(
     {

@@ -7,22 +7,42 @@ declare const grecaptcha: any;
 export class RecaptchaService {
   private chargement: Promise<void> | null = null;
 
+  precharger(): void {
+    if (environment.recaptchaSiteKey) {
+      this.chargerScript();
+    }
+  }
+
   obtenirToken(action: string): Promise<string> {
     if (!environment.recaptchaSiteKey) {
       return Promise.resolve('');
     }
 
-    return this.chargerScript().then(
+    const declenchement = this.chargerScript().then(
       () =>
         new Promise<string>((resolve, reject) => {
-          grecaptcha.ready(() => {
-            grecaptcha
-              .execute(environment.recaptchaSiteKey, { action })
-              .then((token: string) => resolve(token))
-              .catch(reject);
-          });
+          try {
+            grecaptcha.ready(() => {
+              try {
+                grecaptcha
+                  .execute(environment.recaptchaSiteKey, { action })
+                  .then((token: string) => resolve(token))
+                  .catch(reject);
+              } catch (erreur) {
+                reject(erreur);
+              }
+            });
+          } catch (erreur) {
+            reject(erreur);
+          }
         })
     );
+
+    const delaiMax = new Promise<string>((_, reject) =>
+      setTimeout(() => reject(new Error('Délai de vérification anti-bot dépassé')), 8000)
+    );
+
+    return Promise.race([declenchement, delaiMax]);
   }
 
   private chargerScript(): Promise<void> {

@@ -7,7 +7,7 @@
       <label>Où</label>
       <input formControlName="ville" placeholder="Rechercher une destination" [matAutocomplete]="autoVille" />
       <mat-autocomplete #autoVille="matAutocomplete" [displayWith]="afficherVille" (optionSelected)="selectionnerVille($event)">
-        @for (suggestion of suggestionsVille(); track suggestion.libelle) {
+        @for (suggestion of suggestionsVille(); track $index) {
           <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
         }
       </mat-autocomplete>

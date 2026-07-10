@@ -4,6 +4,25 @@
   margin: 0 0 4px;
 }
 
+.case-recurrence {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.ligne-recurrence {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+
+  mat-form-field {
+    flex: 1;
+  }
+}
+
 .sous-titre-page {
   margin: 0 0 20px;
   color: var(--airbnb-texte);

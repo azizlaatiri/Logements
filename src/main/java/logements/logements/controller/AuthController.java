@@ -5,7 +5,6 @@ import logements.logements.dto.AuthResponse;
 import logements.logements.dto.GoogleAuthRequest;
 import logements.logements.dto.GoogleUtilisateurInfo;
 import logements.logements.dto.LoginRequest;
-import logements.logements.dto.VerifierTelephoneRequest;
 import logements.logements.entity.Utilisateur;
 import logements.logements.security.JwtUtils;
 import logements.logements.service.GoogleAuthService;
@@ -79,17 +78,5 @@ public class AuthController {
     public Map<String, String> renvoyerVerification(Authentication authentication) {
         utilisateurService.renvoyerEmailVerification(authentication.getName());
         return Map.of("message", "Email de vérification renvoyé");
-    }
-
-    @PostMapping("/verifier-telephone")
-    public Map<String, String> verifierTelephone(@Valid @RequestBody VerifierTelephoneRequest requete, Authentication authentication) {
-        utilisateurService.verifierTelephone(authentication.getName(), requete.getCode());
-        return Map.of("message", "Téléphone vérifié avec succès");
-    }
-
-    @PostMapping("/renvoyer-code-telephone")
-    public Map<String, String> renvoyerCodeTelephone(Authentication authentication) {
-        utilisateurService.renvoyerCodeTelephone(authentication.getName());
-        return Map.of("message", "Code renvoyé");
     }
 }

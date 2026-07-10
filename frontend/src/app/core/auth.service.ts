@@ -66,24 +66,6 @@ export class AuthService {
     this.utilisateurSignal.set(misAJour);
   }
 
-  verifierTelephone(code: string): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.apiUrl}/auth/verifier-telephone`, { code });
-  }
-
-  renvoyerCodeTelephone(): Observable<{ message: string }> {
-    return this.http.post<{ message: string }>(`${environment.apiUrl}/auth/renvoyer-code-telephone`, {});
-  }
-
-  marquerTelephoneVerifieLocalement(): void {
-    const utilisateur = this.utilisateurSignal();
-    if (!utilisateur) {
-      return;
-    }
-    const misAJour = { ...utilisateur, telephoneVerifie: true };
-    localStorage.setItem(CLE_UTILISATEUR, JSON.stringify(misAJour));
-    this.utilisateurSignal.set(misAJour);
-  }
-
   private enregistrerSession(reponse: AuthResponse): void {
     localStorage.setItem(CLE_TOKEN, reponse.token);
     localStorage.setItem(CLE_UTILISATEUR, JSON.stringify(reponse.utilisateur));

@@ -1,6 +1,7 @@
 package logements.logements.controller;
 
 import jakarta.validation.Valid;
+import logements.logements.dto.ReservationRecurrenteRequest;
 import logements.logements.entity.Reservation;
 import logements.logements.entity.Utilisateur;
 import logements.logements.service.ReservationService;
@@ -31,6 +32,15 @@ public class ReservationController {
         Utilisateur voyageur = utilisateurService.findByEmail(authentication.getName());
         Reservation reservation = reservationService.reserver(logementId, voyageur.getId(), demande);
         return ResponseEntity.status(HttpStatus.CREATED).body(reservation);
+    }
+
+    @PostMapping("/logements/{logementId}/reservations/recurrentes")
+    public ResponseEntity<List<Reservation>> reserverRecurrent(@PathVariable Long logementId,
+                                                                @Valid @RequestBody ReservationRecurrenteRequest requete,
+                                                                Authentication authentication) {
+        Utilisateur voyageur = utilisateurService.findByEmail(authentication.getName());
+        List<Reservation> reservations = reservationService.reserverRecurrent(logementId, voyageur.getId(), requete);
+        return ResponseEntity.status(HttpStatus.CREATED).body(reservations);
     }
 
     @GetMapping("/reservations/moi")

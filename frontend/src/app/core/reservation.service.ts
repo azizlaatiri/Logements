@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { NouvelleReservation, Reservation } from '../models/reservation.model';
+import { NouvelleReservation, NouvelleReservationRecurrente, Reservation } from '../models/reservation.model';
 
 @Injectable({ providedIn: 'root' })
 export class ReservationService {
@@ -10,6 +10,13 @@ export class ReservationService {
 
   reserver(logementId: number, demande: NouvelleReservation): Observable<Reservation> {
     return this.http.post<Reservation>(`${environment.apiUrl}/logements/${logementId}/reservations`, demande);
+  }
+
+  reserverRecurrent(logementId: number, demande: NouvelleReservationRecurrente): Observable<Reservation[]> {
+    return this.http.post<Reservation[]>(
+      `${environment.apiUrl}/logements/${logementId}/reservations/recurrentes`,
+      demande
+    );
   }
 
   mesReservations(): Observable<Reservation[]> {

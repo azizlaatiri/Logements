@@ -1,0 +1,110 @@
+<div class="conteneur-page">
+  <a [routerLink]="['/logements', logementId]" class="lien-retour">
+    <mat-icon>arrow_back</mat-icon>
+    Retour au logement
+  </a>
+
+  <h1 class="titre-page">Gérer les disponibilités</h1>
+
+  @if (chargement()) {
+    <div class="conteneur-chargement">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else {
+    <div class="mise-en-page-dispo">
+      <div class="colonne-formulaire">
+        <div class="carte-blocage">
+          <h2>Bloquer des dates</h2>
+          <form [formGroup]="formulaire" (ngSubmit)="bloquer()">
+            <div class="ligne-dates">
+              <div class="champ-date" (click)="pickerDebut.open()">
+                <label>DÉBUT</label>
+                <input [matDatepicker]="pickerDebut" formControlName="dateDebut" [min]="today" placeholder="Date de début" readonly />
+                <mat-datepicker #pickerDebut></mat-datepicker>
+              </div>
+              <div class="champ-date" (click)="pickerFin.open()">
+                <label>FIN</label>
+                <input [matDatepicker]="pickerFin" formControlName="dateFin" [min]="today" placeholder="Date de fin" readonly />
+                <mat-datepicker #pickerFin></mat-datepicker>
+              </div>
+            </div>
+
+            <mat-form-field appearance="outline" class="champ-pleine-largeur">
+              <mat-label>Motif (optionnel)</mat-label>
+              <input matInput formControlName="motif" placeholder="Ex: travaux, usage personnel" />
+            </mat-form-field>
+
+            <label class="case-recurrence">
+              <input type="checkbox" [checked]="recurrenceActivee()" (change)="basculerRecurrence()" />
+              Répéter ce blocage (récurrent)
+            </label>
+
+            @if (recurrenceActivee()) {
+              <div class="ligne-recurrence">
+                <mat-form-field appearance="outline">
+                  <mat-label>Fréquence</mat-label>
+                  <mat-select formControlName="frequence">
+                    <mat-option value="HEBDOMADAIRE">Toutes les semaines</mat-option>
+                    <mat-option value="MENSUELLE">Tous les mois</mat-option>
+                  </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                  <mat-label>Nombre d'occurrences</mat-label>
+                  <input matInput type="number" formControlName="nombreOccurrences" min="2" max="52" />
+                </mat-form-field>
+              </div>
+            }
+
+            @if (erreur()) {
+              <p class="message-erreur">{{ erreur() }}</p>
+            }
+
+            <button type="submit" class="bouton-airbnb champ-pleine-largeur" [disabled]="formulaire.invalid || enCours()">
+              {{ enCours() ? 'Blocage...' : 'Bloquer ces dates' }}
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div class="colonne-liste">
+        <h2>Blocages actifs</h2>
+        @if (indisponibilites().length === 0) {
+          <p class="aucun-resultat">Aucun blocage manuel pour ce logement.</p>
+        } @else {
+          <div class="liste-blocages">
+            @for (indispo of indisponibilites(); track indispo.id) {
+              <div class="carte-blocage-item">
+                <div>
+                  <p class="dates-blocage">{{ indispo.dateDebut }} → {{ indispo.dateFin }}</p>
+                  @if (indispo.motif) {
+                    <p class="motif-blocage">{{ indispo.motif }}</p>
+                  }
+                  @if (indispo.groupeRecurrenceId) {
+                    <span class="badge-recurrent">Récurrent</span>
+                  }
+                </div>
+                <button type="button" class="bouton-supprimer-icone" (click)="debloquer(indispo)" title="Débloquer">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        }
+
+        <h2>Réservations en cours</h2>
+        @if (!calendrier() || calendrier()!.periodesReservees.length === 0) {
+          <p class="aucun-resultat">Aucune réservation active.</p>
+        } @else {
+          <div class="liste-blocages">
+            @for (periode of calendrier()!.periodesReservees; track periode.dateDebut) {
+              <div class="carte-blocage-item carte-blocage-item--reservee">
+                <p class="dates-blocage">{{ periode.dateDebut }} → {{ periode.dateFin }}</p>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>

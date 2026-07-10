@@ -3,10 +3,14 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Observable } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
 import { LogementService } from '../../core/logement.service';
 import { ReservationService } from '../../core/reservation.service';
@@ -20,7 +24,10 @@ import { Logement } from '../../models/logement.model';
     MatDatepickerModule,
     MatNativeDateModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatInputModule
   ],
   templateUrl: './logement-detail.component.html',
   styleUrl: './logement-detail.component.scss'
@@ -41,8 +48,12 @@ export class LogementDetailComponent implements OnInit {
 
   readonly formulaire = this.fb.group({
     dateDebut: [null as Date | null, Validators.required],
-    dateFin: [null as Date | null, Validators.required]
+    dateFin: [null as Date | null, Validators.required],
+    frequence: ['HEBDOMADAIRE' as 'HEBDOMADAIRE' | 'MENSUELLE'],
+    nombreOccurrences: [4, [Validators.min(2), Validators.max(52)]]
   });
+
+  readonly recurrenceActivee = signal(false);
 
   private readonly valeursFormulaire = toSignal(this.formulaire.valueChanges, {
     initialValue: this.formulaire.getRawValue()
@@ -97,6 +108,10 @@ export class LogementDetailComponent implements OnInit {
     });
   }
 
+  basculerRecurrence(): void {
+    this.recurrenceActivee.update((v) => !v);
+  }
+
   reserver(): void {
     if (this.formulaire.invalid || !this.logement() || this.estProprietaire()) {
       return;
@@ -107,32 +122,39 @@ export class LogementDetailComponent implements OnInit {
       return;
     }
 
-    const { dateDebut, dateFin } = this.formulaire.getRawValue();
+    const { dateDebut, dateFin, frequence, nombreOccurrences } = this.formulaire.getRawValue();
     this.enCoursReservation.set(true);
     this.erreur.set(null);
 
-    this.reservationService
-      .reserver(this.logement()!.id, {
-        dateDebut: this.formatDate(dateDebut!),
-        dateFin: this.formatDate(dateFin!)
-      })
-      .subscribe({
-        next: () => {
-          this.enCoursReservation.set(false);
-          this.snackBar.open('Réservation confirmée !', 'Fermer', { duration: 4000 });
-          this.router.navigate(['/tableau-de-bord']);
-        },
-        error: (err) => {
-          this.enCoursReservation.set(false);
-          if (err.status === 409) {
-            this.erreur.set("Ce logement n'est pas disponible sur cette période");
-          } else if (err.status === 403 && err.error?.message) {
-            this.erreur.set(err.error.message);
-          } else {
-            this.erreur.set('Erreur lors de la réservation');
-          }
+    const requete: Observable<unknown> = this.recurrenceActivee()
+      ? this.reservationService.reserverRecurrent(this.logement()!.id, {
+          dateDebut: this.formatDate(dateDebut!),
+          dateFin: this.formatDate(dateFin!),
+          frequence: frequence!,
+          nombreOccurrences: nombreOccurrences!
+        })
+      : this.reservationService.reserver(this.logement()!.id, {
+          dateDebut: this.formatDate(dateDebut!),
+          dateFin: this.formatDate(dateFin!)
+        });
+
+    requete.subscribe({
+      next: () => {
+        this.enCoursReservation.set(false);
+        this.snackBar.open('Réservation confirmée !', 'Fermer', { duration: 4000 });
+        this.router.navigate(['/tableau-de-bord']);
+      },
+      error: (err: any) => {
+        this.enCoursReservation.set(false);
+        if (err.status === 409) {
+          this.erreur.set(err.error?.message ?? "Ce logement n'est pas disponible sur cette période");
+        } else if (err.status === 403 && err.error?.message) {
+          this.erreur.set(err.error.message);
+        } else {
+          this.erreur.set('Erreur lors de la réservation');
         }
-      });
+      }
+    });
   }
 
   modifier(): void {
@@ -141,6 +163,14 @@ export class LogementDetailComponent implements OnInit {
       return;
     }
     this.router.navigate(['/logements', logement.id, 'modifier']);
+  }
+
+  gererDisponibilites(): void {
+    const logement = this.logement();
+    if (!logement) {
+      return;
+    }
+    this.router.navigate(['/logements', logement.id, 'disponibilites']);
   }
 
   supprimer(): void {

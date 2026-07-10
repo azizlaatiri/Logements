@@ -58,14 +58,6 @@ public class Utilisateur {
     @Pattern(regexp = "^\\+?[0-9 .-]{6,20}$", message = "Numéro de téléphone invalide")
     private String telephone;
 
-    private Boolean telephoneVerifie = false;
-
-    @JsonIgnore
-    private String codeVerificationTelephone;
-
-    @JsonIgnore
-    private LocalDateTime codeVerificationTelephoneExpiration;
-
     @JsonIgnore
     @OneToMany(mappedBy = "proprietaire", cascade = CascadeType.ALL)
     private List<Logement> logements = new ArrayList<>();

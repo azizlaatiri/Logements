@@ -27,6 +27,11 @@ public interface LogementRepository extends JpaRepository<Logement, Long> {
                 AND r.dateDebut <= :dateFin
                 AND r.dateFin >= :dateDebut
             )
+            AND l.id NOT IN (
+                SELECT i.logement.id FROM Indisponibilite i
+                WHERE i.dateDebut <= :dateFin
+                AND i.dateFin >= :dateDebut
+            )
             """)
     List<Logement> rechercherDisponibles(@Param("ville") String ville,
                                           @Param("pays") String pays,

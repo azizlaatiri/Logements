@@ -27,7 +27,7 @@ export class GeocodageService {
   constructor(private http: HttpClient) {}
 
   rechercherVilles(recherche: string): Observable<SuggestionLieu[]> {
-    if (!recherche || recherche.trim().length < 2) {
+    if (typeof recherche !== 'string' || recherche.trim().length < 2) {
       return of([]);
     }
 
@@ -45,7 +45,7 @@ export class GeocodageService {
   }
 
   rechercherAdresses(recherche: string): Observable<SuggestionLieu[]> {
-    if (!recherche || recherche.trim().length < 3) {
+    if (typeof recherche !== 'string' || recherche.trim().length < 3) {
       return of([]);
     }
 

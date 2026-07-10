@@ -41,7 +41,12 @@
       "Bash(taskkill //F //IM node.exe)",
       "Bash(node e2e-photos.js)",
       "Bash(echo \"BACKEND_EXIT=$?\")",
-      "Bash(npx -y @angular/cli@19 generate component pages/verification-email --skip-tests --flat=false)"
+      "Bash(npx -y @angular/cli@19 generate component pages/verification-email --skip-tests --flat=false)",
+      "Bash(./mvnw.cmd -q compile)",
+      "Bash(npx tsc *)",
+      "Bash(./mvnw.cmd -q clean compile)",
+      "Bash(tasklist //FI \"IMAGENAME eq node.exe\")",
+      "Bash(powershell -Command \"Get-Process node -ErrorAction SilentlyContinue\")"
     ]
   }
 }

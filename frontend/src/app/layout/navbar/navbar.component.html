@@ -60,28 +60,3 @@
     </button>
   </div>
 }
-
-@if (telephoneNonVerifie()) {
-  <div class="banniere-verification">
-    <span>
-      Vérifiez votre téléphone (code envoyé par SMS).
-      @if (messageTelephone()) {
-        — {{ messageTelephone() }}
-      }
-    </span>
-    <input
-      type="text"
-      inputmode="numeric"
-      maxlength="6"
-      placeholder="Code à 6 chiffres"
-      class="champ-code"
-      [(ngModel)]="codeTelephone"
-    />
-    <button type="button" (click)="verifierTelephone()" [disabled]="verificationTelephoneEnCours()">
-      {{ verificationTelephoneEnCours() ? 'Vérification...' : 'Vérifier' }}
-    </button>
-    <button type="button" (click)="renvoyerCodeTelephone()" [disabled]="renvoiTelephoneEnCours()">
-      {{ renvoiTelephoneEnCours() ? 'Envoi...' : 'Renvoyer le code' }}
-    </button>
-  </div>
-}

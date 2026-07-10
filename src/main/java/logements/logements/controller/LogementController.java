@@ -1,6 +1,7 @@
 package logements.logements.controller;
 
 import jakarta.validation.Valid;
+import logements.logements.dto.CalendrierDto;
 import logements.logements.entity.Logement;
 import logements.logements.entity.Utilisateur;
 import logements.logements.service.LogementService;
@@ -34,6 +35,11 @@ public class LogementController {
     @GetMapping("/{id}")
     public Logement obtenir(@PathVariable Long id) {
         return logementService.findById(id);
+    }
+
+    @GetMapping("/{id}/calendrier")
+    public CalendrierDto calendrier(@PathVariable Long id) {
+        return logementService.obtenirCalendrier(id);
     }
 
     @GetMapping("/recherche")

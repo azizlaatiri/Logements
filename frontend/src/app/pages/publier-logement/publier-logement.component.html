@@ -28,7 +28,7 @@
             <mat-label>Ville</mat-label>
             <input matInput formControlName="ville" required [matAutocomplete]="autoVille" />
             <mat-autocomplete #autoVille="matAutocomplete" [displayWith]="afficherVille" (optionSelected)="selectionnerVille($event)">
-              @for (suggestion of suggestionsVille(); track suggestion.libelle) {
+              @for (suggestion of suggestionsVille(); track $index) {
                 <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
               }
             </mat-autocomplete>
@@ -57,7 +57,7 @@
           <mat-label>Adresse</mat-label>
           <input matInput formControlName="adresse" [matAutocomplete]="autoAdresse" />
           <mat-autocomplete #autoAdresse="matAutocomplete" [displayWith]="afficherAdresse" (optionSelected)="selectionnerAdresse($event)">
-            @for (suggestion of suggestionsAdresse(); track suggestion.libelle) {
+            @for (suggestion of suggestionsAdresse(); track $index) {
               <mat-option [value]="suggestion">{{ suggestion.libelle }}</mat-option>
             }
           </mat-autocomplete>

@@ -8,7 +8,6 @@ export interface Utilisateur {
   role: Role;
   emailVerifie: boolean;
   telephone?: string;
-  telephoneVerifie: boolean;
 }
 
 export interface AuthResponse {

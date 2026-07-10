@@ -69,4 +69,8 @@ public class Logement {
     @JsonIgnore
     @OneToMany(mappedBy = "logement", cascade = CascadeType.ALL)
     private List<Reservation> reservations = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "logement", cascade = CascadeType.ALL)
+    private List<Indisponibilite> indisponibilites = new ArrayList<>();
 }

@@ -1,5 +1,6 @@
 package logements.logements.service;
 
+import logements.logements.dto.CalendrierDto;
 import logements.logements.entity.Logement;
 import logements.logements.entity.StatutReservation;
 import logements.logements.entity.Utilisateur;
@@ -33,9 +34,6 @@ public class LogementService {
     public Logement creer(Logement logement, Utilisateur proprietaire) {
         if (!proprietaire.getEmailVerifie()) {
             throw new AccessDeniedException("Veuillez vérifier votre adresse email avant de publier un logement");
-        }
-        if (proprietaire.getTelephone() != null && !proprietaire.getTelephoneVerifie()) {
-            throw new AccessDeniedException("Veuillez vérifier votre numéro de téléphone avant de publier un logement");
         }
         logement.setProprietaire(proprietaire);
         return logementRepository.save(logement);
@@ -77,6 +75,21 @@ public class LogementService {
         if (logement.getProprietaire() == null || !logement.getProprietaire().getEmail().equals(emailUtilisateur)) {
             throw new AccessDeniedException("Vous ne pouvez modifier que vos propres logements");
         }
+    }
+
+    public CalendrierDto obtenirCalendrier(Long logementId) {
+        Logement logement = findById(logementId);
+
+        List<CalendrierDto.PeriodeDto> periodesReservees = logement.getReservations().stream()
+                .filter(r -> r.getStatut() != StatutReservation.ANNULEE)
+                .map(r -> new CalendrierDto.PeriodeDto(r.getDateDebut(), r.getDateFin()))
+                .toList();
+
+        List<CalendrierDto.PeriodeDto> periodesBloquees = logement.getIndisponibilites().stream()
+                .map(i -> new CalendrierDto.PeriodeDto(i.getDateDebut(), i.getDateFin()))
+                .toList();
+
+        return new CalendrierDto(periodesReservees, periodesBloquees);
     }
 
     public List<Logement> rechercher(String ville, String pays, LocalDate dateDebut, LocalDate dateFin) {

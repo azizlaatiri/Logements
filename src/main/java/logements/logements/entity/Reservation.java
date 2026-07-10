@@ -42,6 +42,8 @@ public class Reservation {
 
     private LocalDateTime dateCreation;
 
+    private String groupeRecurrenceId;
+
     @PrePersist
     public void prePersist() {
         if (dateCreation == null) {
