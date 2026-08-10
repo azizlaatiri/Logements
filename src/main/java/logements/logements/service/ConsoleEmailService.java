@@ -3,14 +3,16 @@ package logements.logements.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 /**
  * Implémentation de développement : n'envoie aucun email réel, se contente
- * d'afficher le lien de vérification dans les logs du serveur. À remplacer
- * par une implémentation SMTP/API (Brevo, SendGrid...) en production.
+ * d'afficher le lien de vérification dans les logs du serveur.
+ * Active uniquement hors profil "prod" (voir {@link SmtpEmailService}).
  */
 @Service
+@Profile("!prod")
 public class ConsoleEmailService implements EmailService {
 
     private static final Logger log = LoggerFactory.getLogger(ConsoleEmailService.class);
