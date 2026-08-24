@@ -49,8 +49,18 @@ public class ReservationController {
         return reservationService.findByUtilisateur(utilisateur.getId());
     }
 
+    @GetMapping("/logements/{logementId}/reservations")
+    public List<Reservation> reservationsRecues(@PathVariable Long logementId, Authentication authentication) {
+        return reservationService.findByLogement(logementId, authentication.getName());
+    }
+
     @DeleteMapping("/reservations/{id}")
     public Reservation annuler(@PathVariable Long id, Authentication authentication) {
         return reservationService.annuler(id, authentication.getName());
+    }
+
+    @PatchMapping("/reservations/{id}/confirmer")
+    public Reservation confirmer(@PathVariable Long id, Authentication authentication) {
+        return reservationService.confirmer(id, authentication.getName());
     }
 }

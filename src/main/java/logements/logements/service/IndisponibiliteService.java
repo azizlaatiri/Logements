@@ -11,6 +11,7 @@ import logements.logements.repository.IndisponibiliteRepository;
 import logements.logements.repository.LogementRepository;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -32,12 +33,13 @@ public class IndisponibiliteService {
         return indisponibiliteRepository.findByLogementId(logementId);
     }
 
+    @Transactional
     public Indisponibilite bloquer(Long logementId, BlocageRequest requete, String emailProprietaire) {
         if (requete.getDateFin().isBefore(requete.getDateDebut()) || requete.getDateFin().isEqual(requete.getDateDebut())) {
             throw new IllegalArgumentException("La date de fin doit être après la date de début");
         }
 
-        Logement logement = trouverEtVerifierProprietaire(logementId, emailProprietaire);
+        Logement logement = trouverEtVerifierProprietaireAvecVerrou(logementId, emailProprietaire);
         verifierAucunChevauchementAvecReservations(logement, requete.getDateDebut(), requete.getDateFin());
 
         Indisponibilite indisponibilite = new Indisponibilite();
@@ -48,8 +50,9 @@ public class IndisponibiliteService {
         return indisponibiliteRepository.save(indisponibilite);
     }
 
+    @Transactional
     public List<Indisponibilite> bloquerRecurrent(Long logementId, BlocageRecurrentRequest requete, String emailProprietaire) {
-        Logement logement = trouverEtVerifierProprietaire(logementId, emailProprietaire);
+        Logement logement = trouverEtVerifierProprietaireAvecVerrou(logementId, emailProprietaire);
 
         List<LocalDate[]> occurrences = RecurrenceUtils.genererOccurrences(
                 requete.getDateDebut(), requete.getDateFin(), requete.getFrequence(), requete.getNombreOccurrences());
@@ -85,6 +88,21 @@ public class IndisponibiliteService {
     private Logement trouverEtVerifierProprietaire(Long logementId, String emailProprietaire) {
         Logement logement = logementRepository.findById(logementId)
                 .orElseThrow(() -> new ResourceNotFoundException("Logement introuvable: " + logementId));
+        return verifierProprietaire(logement, emailProprietaire);
+    }
+
+    /**
+     * Comme {@link #trouverEtVerifierProprietaire}, mais verrouille la ligne du
+     * logement (SELECT ... FOR UPDATE) pour la durée de la transaction, afin de
+     * sérialiser les blocages de dates avec les réservations concurrentes.
+     */
+    private Logement trouverEtVerifierProprietaireAvecVerrou(Long logementId, String emailProprietaire) {
+        Logement logement = logementRepository.findByIdForUpdate(logementId)
+                .orElseThrow(() -> new ResourceNotFoundException("Logement introuvable: " + logementId));
+        return verifierProprietaire(logement, emailProprietaire);
+    }
+
+    private Logement verifierProprietaire(Logement logement, String emailProprietaire) {
         if (logement.getProprietaire() == null || !logement.getProprietaire().getEmail().equals(emailProprietaire)) {
             throw new AccessDeniedException("Vous ne pouvez gérer que vos propres logements");
         }

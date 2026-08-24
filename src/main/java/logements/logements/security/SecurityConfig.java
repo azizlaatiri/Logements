@@ -74,6 +74,8 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/logements/*/indisponibilites").hasRole("HOTE")
                         .requestMatchers(HttpMethod.POST, "/api/logements/*/indisponibilites/recurrentes").hasRole("HOTE")
                         .requestMatchers(HttpMethod.DELETE, "/api/logements/*/indisponibilites/*").hasRole("HOTE")
+                        .requestMatchers(HttpMethod.GET, "/api/logements/*/reservations").hasRole("HOTE")
+                        .requestMatchers(HttpMethod.PATCH, "/api/reservations/*/confirmer").hasRole("HOTE")
                         .requestMatchers(HttpMethod.GET, "/api/logements/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/logements/*/reservations").authenticated()

@@ -7,8 +7,19 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface LogementRepository extends JpaRepository<Logement, Long> {
+
+    /**
+     * Verrouille la ligne du logement (SELECT ... FOR UPDATE) pour la durée de la
+     * transaction, afin de sérialiser les vérifications de disponibilité
+     * concurrentes (réservation et blocage de dates) et éviter le double-booking.
+     * Requête native : la variante JPQL + @Lock(PESSIMISTIC_WRITE) génère
+     * "FOR UPDATE OF alias", une syntaxe invalide sous MariaDB.
+     */
+    @Query(value = "SELECT * FROM logements WHERE id = :id FOR UPDATE", nativeQuery = true)
+    Optional<Logement> findByIdForUpdate(@Param("id") Long id);
 
     @Query("""
             SELECT l FROM Logement l
