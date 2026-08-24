@@ -1,0 +1,42 @@
+<div class="conteneur-page">
+  <a [routerLink]="['/logements', logementId]" class="lien-retour">
+    <mat-icon>arrow_back</mat-icon>
+    Retour au logement
+  </a>
+
+  <h1 class="titre-page">Réservations reçues</h1>
+
+  @if (chargement()) {
+    <div class="conteneur-chargement">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else if (reservations().length === 0) {
+    <p class="aucun-resultat">Aucune réservation pour ce logement.</p>
+  } @else {
+    <div class="liste-reservations">
+      @for (r of reservations(); track r.id) {
+        <div class="carte-reservation">
+          <div class="avatar-voyageur">{{ r.voyageur.prenom.charAt(0) }}</div>
+          <div class="infos-reservation">
+            <div class="entete-reservation">
+              <span class="nom-voyageur">{{ r.voyageur.prenom }} {{ r.voyageur.nom }}</span>
+              <span class="badge" [class]="'badge-' + r.statut.toLowerCase()">{{ r.statut }}</span>
+            </div>
+            <p class="email-voyageur">{{ r.voyageur.email }}</p>
+            <p class="dates-reservation">{{ r.dateDebut }} → {{ r.dateFin }}</p>
+            <p class="prix-reservation">{{ r.prixTotal }} € au total</p>
+
+            @if (r.statut === 'EN_ATTENTE') {
+              <div class="actions-reservation">
+                <button type="button" class="bouton-confirmer" (click)="confirmer(r)">Confirmer</button>
+                <button type="button" class="lien-annuler" (click)="annuler(r)">Refuser</button>
+              </div>
+            } @else if (r.statut === 'CONFIRMEE') {
+              <button type="button" class="lien-annuler" (click)="annuler(r)">Annuler la réservation</button>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

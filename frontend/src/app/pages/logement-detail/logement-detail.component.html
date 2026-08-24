@@ -71,6 +71,10 @@
                 <mat-icon>event_busy</mat-icon>
                 Gérer les disponibilités
               </button>
+              <button type="button" class="bouton-modifier champ-pleine-largeur" (click)="voirReservations()">
+                <mat-icon>list_alt</mat-icon>
+                Voir les réservations
+              </button>
               <button type="button" class="bouton-supprimer champ-pleine-largeur" (click)="supprimer()" [disabled]="suppressionEnCours()">
                 <mat-icon>delete</mat-icon>
                 Supprimer

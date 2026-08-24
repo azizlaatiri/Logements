@@ -47,5 +47,11 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./pages/gestion-disponibilite/gestion-disponibilite.component').then((m) => m.GestionDisponibiliteComponent)
   },
+  {
+    path: 'logements/:id/reservations',
+    canActivate: [authGuard, hoteGuard],
+    loadComponent: () =>
+      import('./pages/reservations-recues/reservations-recues.component').then((m) => m.ReservationsRecuesComponent)
+  },
   { path: '**', redirectTo: '' }
 ];

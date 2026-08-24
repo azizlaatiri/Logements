@@ -141,7 +141,7 @@ export class LogementDetailComponent implements OnInit {
     requete.subscribe({
       next: () => {
         this.enCoursReservation.set(false);
-        this.snackBar.open('Réservation confirmée !', 'Fermer', { duration: 4000 });
+        this.snackBar.open("Demande de réservation envoyée ! L'hôte doit encore la confirmer.", 'Fermer', { duration: 5000 });
         this.router.navigate(['/tableau-de-bord']);
       },
       error: (err: any) => {
@@ -171,6 +171,14 @@ export class LogementDetailComponent implements OnInit {
       return;
     }
     this.router.navigate(['/logements', logement.id, 'disponibilites']);
+  }
+
+  voirReservations(): void {
+    const logement = this.logement();
+    if (!logement) {
+      return;
+    }
+    this.router.navigate(['/logements', logement.id, 'reservations']);
   }
 
   supprimer(): void {

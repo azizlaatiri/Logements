@@ -23,7 +23,15 @@ export class ReservationService {
     return this.http.get<Reservation[]>(`${environment.apiUrl}/reservations/moi`);
   }
 
+  reservationsRecues(logementId: number): Observable<Reservation[]> {
+    return this.http.get<Reservation[]>(`${environment.apiUrl}/logements/${logementId}/reservations`);
+  }
+
   annuler(id: number): Observable<Reservation> {
     return this.http.delete<Reservation>(`${environment.apiUrl}/reservations/${id}`);
+  }
+
+  confirmer(id: number): Observable<Reservation> {
+    return this.http.patch<Reservation>(`${environment.apiUrl}/reservations/${id}/confirmer`, {});
   }
 }
