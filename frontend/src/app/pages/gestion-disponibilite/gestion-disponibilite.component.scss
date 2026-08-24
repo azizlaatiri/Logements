@@ -25,9 +25,12 @@
 }
 
 .carte-blocage {
-  border: 1px solid var(--couleur-bordure, #e0e0e0);
+  border: 1px solid var(--airbnb-bordure-claire);
   border-radius: 12px;
   padding: 1.25rem;
+  background: var(--airbnb-surface);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
 
   h2 {
     margin-top: 0;
@@ -41,7 +44,7 @@
 
   .champ-date {
     flex: 1;
-    border: 1px solid var(--couleur-bordure, #e0e0e0);
+    border: 1px solid var(--airbnb-bordure-claire);
     border-radius: 8px;
     padding: 0.5rem 0.75rem;
     cursor: pointer;
@@ -93,9 +96,15 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid var(--couleur-bordure, #e0e0e0);
+  border: 1px solid var(--airbnb-bordure-claire);
   border-radius: 8px;
   padding: 0.75rem 1rem;
+  transition: border-color var(--anim-rapide), transform var(--anim-rapide);
+
+  &:hover {
+    border-color: var(--airbnb-bordure);
+    transform: translateY(-1px);
+  }
 
   &--reservee {
     opacity: 0.75;
@@ -119,15 +128,20 @@
   font-size: 0.7rem;
   padding: 0.15rem 0.5rem;
   border-radius: 999px;
-  background: var(--couleur-accent-fond, #eef2ff);
-  color: var(--couleur-accent, #4338ca);
+  background: rgba(168, 85, 247, 0.15);
+  color: #c4b5fd;
 }
 
 .bouton-supprimer-icone {
   background: none;
   border: none;
   cursor: pointer;
-  color: #b91c1c;
+  color: #f87171;
   display: flex;
   align-items: center;
+  transition: transform var(--anim-rapide);
+
+  &:hover {
+    transform: scale(1.1);
+  }
 }

@@ -1,8 +1,9 @@
 .hero {
   padding: 56px 24px 40px;
   text-align: center;
-  background: linear-gradient(180deg, #fff7f5 0%, #ffffff 100%);
+  background: var(--airbnb-lavage-hero);
   border-bottom: 1px solid var(--airbnb-bordure-claire);
+  animation: entreeFondu 0.6s var(--anim-easing) both;
 
   h1 {
     margin: 0 0 8px;
@@ -23,12 +24,20 @@
   align-items: stretch;
   max-width: 920px;
   margin: 0 auto;
-  background: #ffffff;
+  background: var(--airbnb-surface);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border: 1px solid var(--airbnb-bordure);
   border-radius: var(--airbnb-rayon-pilule);
   box-shadow: var(--airbnb-ombre-carte);
   padding: 6px;
   flex-wrap: wrap;
+  transition: box-shadow var(--anim-normale);
+
+  &:hover,
+  &:focus-within {
+    box-shadow: var(--airbnb-ombre-survol);
+  }
 
   @media (max-width: 720px) {
     border-radius: 24px;
@@ -87,16 +96,17 @@
   align-self: center;
   border-radius: 50%;
   border: none;
-  background: var(--airbnb-rouge);
+  background: var(--airbnb-degrade);
   color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: filter var(--anim-rapide), box-shadow var(--anim-rapide);
 
   &:hover {
-    background: var(--airbnb-rouge-fonce);
+    filter: brightness(1.12);
+    box-shadow: var(--airbnb-ombre-survol);
   }
 }
 
@@ -143,13 +153,30 @@
   color: inherit;
   text-decoration: none;
   display: block;
+  padding: 8px;
+  border-radius: var(--airbnb-rayon-lg);
+  border: 1px solid transparent;
+  animation: entreeFondu 0.5s var(--anim-easing) both;
+  transition: transform var(--anim-normale), border-color var(--anim-normale), box-shadow var(--anim-normale);
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{$i * 0.04}s;
+    }
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--airbnb-bordure-claire);
+    box-shadow: var(--airbnb-ombre-survol);
+  }
 }
 
 .image-logement {
   aspect-ratio: 1 / 1;
   border-radius: var(--airbnb-rayon-lg);
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--airbnb-surface-forte);
   margin-bottom: 12px;
 
   img {
@@ -157,12 +184,12 @@
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.25s ease;
+    transition: transform 0.35s var(--anim-easing);
   }
 }
 
 .carte-logement:hover img {
-  transform: scale(1.04);
+  transform: scale(1.06);
 }
 
 .image-placeholder {
@@ -171,7 +198,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #ffe4e9 0%, #ffd7dd 100%);
+  background: var(--airbnb-teinte-claire);
 
   mat-icon {
     font-size: 40px;

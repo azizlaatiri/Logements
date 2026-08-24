@@ -2,7 +2,9 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: #ffffff;
+  background: rgba(13, 12, 21, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--airbnb-bordure-claire);
 }
 
@@ -19,12 +21,32 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  color: var(--airbnb-rouge);
   text-decoration: none;
   font-weight: 800;
   font-size: 1.4rem;
   letter-spacing: -0.02em;
   white-space: nowrap;
+  transition: transform var(--anim-rapide);
+
+  span {
+    background: var(--airbnb-degrade);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  mat-icon {
+    color: var(--airbnb-rouge);
+    transition: transform var(--anim-normale);
+  }
+
+  &:hover {
+    transform: scale(1.04);
+  }
+
+  &:hover mat-icon {
+    transform: rotate(-8deg);
+  }
 }
 
 .liens-centre {
@@ -40,10 +62,11 @@
   font-size: 0.9rem;
   padding: 12px 16px;
   border-radius: var(--airbnb-rayon-pilule);
-  transition: background 0.15s ease;
+  transition: background var(--anim-rapide), transform var(--anim-rapide);
 
   &:hover {
     background: var(--airbnb-bordure-claire);
+    transform: translateY(-1px);
   }
 }
 
@@ -70,13 +93,16 @@
   padding: 6px 6px 6px 12px;
   border: 1px solid var(--airbnb-bordure);
   border-radius: var(--airbnb-rayon-pilule);
-  background: #ffffff;
+  background: var(--airbnb-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   cursor: pointer;
   box-shadow: var(--airbnb-ombre-legere);
-  transition: box-shadow 0.15s ease;
+  transition: box-shadow var(--anim-rapide), transform var(--anim-rapide);
 
   &:hover {
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    box-shadow: var(--airbnb-ombre-survol);
+    transform: translateY(-1px);
   }
 
   mat-icon {
@@ -88,7 +114,7 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--airbnb-texte-clair);
+  background: var(--airbnb-degrade);
   color: #ffffff;
   display: flex;
   align-items: center;
@@ -109,13 +135,17 @@
   top: calc(100% + 12px);
   right: 0;
   min-width: 220px;
-  background: #ffffff;
+  background: #16141f;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-radius: 12px;
   box-shadow: var(--airbnb-ombre-carte);
   border: 1px solid var(--airbnb-bordure-claire);
   padding: 8px 0;
   display: flex;
   flex-direction: column;
+  transform-origin: top right;
+  animation: apparitionDouce 0.18s var(--anim-easing) both;
 }
 
 .panneau-salutation {
@@ -137,9 +167,11 @@
   width: 100%;
   cursor: pointer;
   font-family: inherit;
+  transition: background var(--anim-rapide), padding-left var(--anim-rapide);
 
   &:hover {
     background: var(--airbnb-bordure-claire);
+    padding-left: 20px;
   }
 }
 
@@ -160,19 +192,21 @@
   gap: 16px;
   flex-wrap: wrap;
   padding: 10px 24px;
-  background: #fff8e1;
-  border-bottom: 1px solid #f0e0a8;
+  background: rgba(245, 158, 11, 0.1);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
   font-size: 0.85rem;
-  color: #7a5c00;
+  color: #fbbf24;
   text-align: center;
+  animation: glissementHaut 0.35s var(--anim-easing) both;
 
   .champ-code {
     flex-shrink: 0;
     width: 130px;
     padding: 4px 10px;
-    border: 1px solid #7a5c00;
+    border: 1px solid rgba(245, 158, 11, 0.5);
     border-radius: var(--airbnb-rayon-pilule);
-    background: #ffffff;
+    background: var(--airbnb-surface);
+    color: var(--airbnb-texte);
     font-size: 0.85rem;
     font-family: inherit;
     letter-spacing: 0.15em;
@@ -180,24 +214,25 @@
 
     &:focus {
       outline: none;
-      border-color: var(--airbnb-texte);
+      border-color: #fbbf24;
     }
   }
 
   button {
     flex-shrink: 0;
     background: none;
-    border: 1px solid #7a5c00;
+    border: 1px solid rgba(245, 158, 11, 0.5);
     border-radius: var(--airbnb-rayon-pilule);
     padding: 4px 14px;
     font-weight: 600;
     font-size: 0.8rem;
-    color: #7a5c00;
+    color: #fbbf24;
     cursor: pointer;
     font-family: inherit;
+    transition: background var(--anim-rapide);
 
     &:hover:not(:disabled) {
-      background: #f0e0a8;
+      background: rgba(245, 158, 11, 0.18);
     }
 
     &:disabled {

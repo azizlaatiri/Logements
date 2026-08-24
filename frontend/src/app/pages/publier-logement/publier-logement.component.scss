@@ -32,7 +32,7 @@ form {
 }
 
 .message-erreur {
-  color: #c62828;
+  color: #f87171;
   font-size: 0.9rem;
   margin: 12px 0 0;
 }
@@ -94,7 +94,7 @@ form {
   aspect-ratio: 1 / 1;
   border-radius: 10px;
   overflow: hidden;
-  background: #f0f0f0;
+  background: var(--airbnb-surface-forte);
 
   img {
     width: 100%;
