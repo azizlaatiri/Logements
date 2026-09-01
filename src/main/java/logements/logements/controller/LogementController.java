@@ -32,6 +32,12 @@ public class LogementController {
         return logementService.findAll();
     }
 
+    @GetMapping("/mes-logements")
+    public List<Logement> mesLogements(Authentication authentication) {
+        Utilisateur proprietaire = utilisateurService.findByEmail(authentication.getName());
+        return logementService.findByProprietaire(proprietaire.getId());
+    }
+
     @GetMapping("/{id}")
     public Logement obtenir(@PathVariable Long id) {
         return logementService.findById(id);

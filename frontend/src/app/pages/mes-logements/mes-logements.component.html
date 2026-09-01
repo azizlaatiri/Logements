@@ -1,0 +1,46 @@
+<div class="conteneur-page">
+  <h1 class="titre-page">Mes logements</h1>
+
+  @if (chargement()) {
+    <div class="conteneur-chargement">
+      <mat-spinner diameter="40" />
+    </div>
+  } @else if (logements().length === 0) {
+    <p class="aucun-resultat">
+      Vous n'avez publié aucun logement. <a routerLink="/publier">Publier un logement</a>
+    </p>
+  } @else {
+    <div class="liste-logements">
+      @for (l of logements(); track l.id; let i = $index) {
+        <div class="carte-logement" [appReveal]="i" appSpotlight>
+          <div class="image-logement">
+            @if (l.imageUrl) {
+              <img [src]="l.imageUrl" [alt]="l.titre" />
+            } @else {
+              <div class="image-placeholder">
+                <mat-icon>home</mat-icon>
+              </div>
+            }
+          </div>
+
+          <div class="infos-logement">
+            <a [routerLink]="['/logements', l.id]" class="titre-logement">{{ l.titre }}</a>
+            <p class="ville-logement">{{ l.ville }}@if (l.pays) {, {{ l.pays }}}</p>
+            <p class="prix-logement"><strong>{{ l.prixParNuit }} €</strong> / nuit</p>
+
+            <div class="actions-logement">
+              <a [routerLink]="['/logements', l.id, 'reservations']" class="bouton-secondaire">
+                <mat-icon>list_alt</mat-icon>
+                Réservations
+              </a>
+              <a [routerLink]="['/logements', l.id, 'disponibilites']" class="bouton-secondaire">
+                <mat-icon>event_busy</mat-icon>
+                Disponibilités
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

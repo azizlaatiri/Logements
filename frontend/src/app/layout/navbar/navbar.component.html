@@ -1,8 +1,20 @@
-<header class="entete">
+<header class="entete" [class.entete-defilee]="defile()">
   <div class="entete-contenu">
-    <a routerLink="/" class="logo">
-      <mat-icon>home</mat-icon>
-      <span>logements</span>
+    <a routerLink="/" class="logo" aria-label="Logements — accueil">
+      <svg class="logo-marque" viewBox="0 0 72 36" width="54" height="27" aria-hidden="true">
+        <defs>
+          <linearGradient id="degradeLogo" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#8b5cf6" />
+            <stop offset="50%" stop-color="#a855f7" />
+            <stop offset="100%" stop-color="#ec4899" />
+          </linearGradient>
+        </defs>
+        <polygon class="logo-toit" points="2,18 36,4 70,18" fill="url(#degradeLogo)" />
+        <rect class="logo-corps" x="8" y="18" width="56" height="14" rx="4" fill="url(#degradeLogo)" />
+        <rect class="logo-porte" x="30" y="23" width="12" height="9" rx="1.5" />
+        <circle class="logo-anneau" cx="65" cy="7" r="2.6" />
+        <circle class="logo-pastille" cx="65" cy="7" r="2.1" />
+      </svg>
     </a>
 
     <nav class="liens-centre">
@@ -15,6 +27,19 @@
       @if (!estHote()) {
         <a routerLink="/inscription" class="lien-hote lien-hote--desktop">Devenir hôte</a>
       }
+
+      <button
+        type="button"
+        class="bouton-theme"
+        (click)="themeService.basculer()"
+        [attr.aria-label]="themeService.theme() === 'dark' ? 'Activer le mode clair' : 'Activer le mode sombre'"
+      >
+        @if (themeService.theme() === 'dark') {
+          <mat-icon class="icone-theme">dark_mode</mat-icon>
+        } @else {
+          <mat-icon class="icone-theme">light_mode</mat-icon>
+        }
+      </button>
 
       <div class="menu-utilisateur">
         <button type="button" class="bouton-menu" (click)="basculerMenu()">
@@ -30,6 +55,9 @@
           <div class="panneau-menu" (click)="fermerMenu()">
             @if (estConnecte()) {
               <span class="panneau-salutation">Bonjour {{ utilisateur()?.prenom }}</span>
+              @if (estHote()) {
+                <a routerLink="/mes-logements" class="panneau-lien">Mes logements</a>
+              }
               <a routerLink="/tableau-de-bord" class="panneau-lien">Mes réservations</a>
               @if (estHote()) {
                 <a routerLink="/publier" class="panneau-lien">Publier un logement</a>

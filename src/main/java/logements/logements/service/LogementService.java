@@ -31,6 +31,10 @@ public class LogementService {
                 .orElseThrow(() -> new ResourceNotFoundException("Logement introuvable: " + id));
     }
 
+    public List<Logement> findByProprietaire(Long proprietaireId) {
+        return logementRepository.findByProprietaireId(proprietaireId);
+    }
+
     public Logement creer(Logement logement, Utilisateur proprietaire) {
         if (!proprietaire.getEmailVerifie()) {
             throw new AccessDeniedException("Veuillez vérifier votre adresse email avant de publier un logement");

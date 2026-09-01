@@ -36,6 +36,12 @@ export const routes: Routes = [
       import('./pages/publier-logement/publier-logement.component').then((m) => m.PublierLogementComponent)
   },
   {
+    path: 'mes-logements',
+    canActivate: [authGuard, hoteGuard],
+    loadComponent: () =>
+      import('./pages/mes-logements/mes-logements.component').then((m) => m.MesLogementsComponent)
+  },
+  {
     path: 'logements/:id/modifier',
     canActivate: [authGuard, hoteGuard],
     loadComponent: () =>

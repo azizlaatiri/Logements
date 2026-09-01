@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+
 /**
  * Implémentation de développement : n'envoie aucun email réel, se contente
  * d'afficher le lien de vérification dans les logs du serveur.
@@ -38,5 +40,20 @@ public class ConsoleEmailService implements EmailService {
                 Ce lien expire dans 24 heures.
                 ================================================================================
                 """, destinataire, prenom, lien);
+    }
+
+    @Override
+    public void envoyerNotificationNouvelleReservation(String destinataire, String prenomHote, String titreLogement,
+                                                         LocalDate dateDebut, LocalDate dateFin) {
+        log.info("""
+
+                ============= NOTIFICATION NOUVELLE RESERVATION (mode developpement) =============
+                A: {}
+                Bonjour {},
+
+                Votre logement "{}" vient de recevoir une nouvelle demande de réservation
+                du {} au {}. Connectez-vous pour la confirmer ou la refuser.
+                ====================================================================================
+                """, destinataire, prenomHote, titreLogement, dateDebut, dateFin);
     }
 }

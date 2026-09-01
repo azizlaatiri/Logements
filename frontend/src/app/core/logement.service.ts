@@ -23,6 +23,10 @@ export class LogementService {
     return this.http.get<Logement>(`${environment.apiUrl}/logements/${id}`);
   }
 
+  mesLogements(): Observable<Logement[]> {
+    return this.http.get<Logement[]>(`${environment.apiUrl}/logements/mes-logements`);
+  }
+
   rechercher(criteres: CriteresRecherche): Observable<Logement[]> {
     let params = new HttpParams();
     if (criteres.ville) {

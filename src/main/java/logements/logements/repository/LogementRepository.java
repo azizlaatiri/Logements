@@ -21,6 +21,8 @@ public interface LogementRepository extends JpaRepository<Logement, Long> {
     @Query(value = "SELECT * FROM logements WHERE id = :id FOR UPDATE", nativeQuery = true)
     Optional<Logement> findByIdForUpdate(@Param("id") Long id);
 
+    List<Logement> findByProprietaireId(Long proprietaireId);
+
     @Query("""
             SELECT l FROM Logement l
             WHERE (:ville IS NULL OR LOWER(l.ville) LIKE LOWER(CONCAT('%', :ville, '%')))
