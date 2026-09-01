@@ -71,8 +71,8 @@
   } @else {
     <h2 class="titre-resultats">{{ logements().length }} logement(s) disponible(s)</h2>
     <div class="grille-logements">
-      @for (logement of logements(); track logement.id) {
-        <a class="carte-logement" [routerLink]="['/logements', logement.id]">
+      @for (logement of logements(); track logement.id; let i = $index) {
+        <a class="carte-logement" [routerLink]="['/logements', logement.id]" [appReveal]="i" appSpotlight>
           <div class="image-logement">
             @if (logement.imageUrl) {
               <img [src]="logement.imageUrl" [alt]="logement.titre" loading="lazy" />
@@ -83,7 +83,15 @@
             }
           </div>
           <div class="infos-logement">
-            <p class="titre-logement">{{ logement.titre }}</p>
+            <div class="entete-carte">
+              <p class="titre-logement">{{ logement.titre }}</p>
+              @if (logement.nombreAvis) {
+                <span class="note-carte">
+                  <app-etoiles [note]="logement.noteMoyenne ?? 0" taille="petite" />
+                  {{ logement.noteMoyenne?.toFixed(1) }}
+                </span>
+              }
+            </div>
             <p class="ville-logement">{{ logement.ville }}@if (logement.pays) {, {{ logement.pays }}}</p>
             @if (logement.nombreChambres) {
               <p class="details-logement">{{ logement.nombreChambres }} chambre(s) · {{ logement.nombreVoyageursMax }} voyageurs max</p>

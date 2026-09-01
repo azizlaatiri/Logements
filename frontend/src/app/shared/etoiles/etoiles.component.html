@@ -1,0 +1,24 @@
+<div
+  class="etoiles"
+  [class.etoiles--interactif]="interactif"
+  [class.etoiles--petite]="taille === 'petite'"
+  role="img"
+  [attr.aria-label]="'Note ' + note.toFixed(1) + ' sur 5'"
+  (mouseleave)="arreterSurvol()"
+>
+  @for (position of positions; track position) {
+    @if (interactif) {
+      <button
+        type="button"
+        class="etoile-bouton"
+        (click)="choisir(position)"
+        (mouseenter)="survoler(position)"
+        [attr.aria-label]="'Donner la note ' + position + ' sur 5'"
+      >
+        <mat-icon class="etoile-icone">{{ icone(position) }}</mat-icon>
+      </button>
+    } @else {
+      <mat-icon class="etoile-icone">{{ icone(position) }}</mat-icon>
+    }
+  }
+</div>

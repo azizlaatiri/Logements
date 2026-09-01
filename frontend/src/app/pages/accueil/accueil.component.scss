@@ -156,14 +156,7 @@
   padding: 8px;
   border-radius: var(--airbnb-rayon-lg);
   border: 1px solid transparent;
-  animation: entreeFondu 0.5s var(--anim-easing) both;
   transition: transform var(--anim-normale), border-color var(--anim-normale), box-shadow var(--anim-normale);
-
-  @for $i from 1 through 12 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.04}s;
-    }
-  }
 
   &:hover {
     transform: translateY(-4px);
@@ -215,6 +208,13 @@
   gap: 2px;
 }
 
+.entete-carte {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .titre-logement {
   margin: 0;
   font-weight: 600;
@@ -222,6 +222,16 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
+}
+
+.note-carte {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .ville-logement {

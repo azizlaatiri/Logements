@@ -12,9 +12,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../core/auth.service';
+import { AvisService } from '../../core/avis.service';
 import { LogementService } from '../../core/logement.service';
 import { ReservationService } from '../../core/reservation.service';
+import { Avis } from '../../models/avis.model';
 import { Logement } from '../../models/logement.model';
+import { SpotlightDirective } from '../../shared/spotlight.directive';
+import { EtoilesComponent } from '../../shared/etoiles/etoiles.component';
 
 @Component({
   selector: 'app-logement-detail',
@@ -27,7 +31,9 @@ import { Logement } from '../../models/logement.model';
     MatProgressSpinnerModule,
     MatSelectModule,
     MatFormFieldModule,
-    MatInputModule
+    MatInputModule,
+    SpotlightDirective,
+    EtoilesComponent
   ],
   templateUrl: './logement-detail.component.html',
   styleUrl: './logement-detail.component.scss'
@@ -37,6 +43,7 @@ export class LogementDetailComponent implements OnInit {
   private readonly router = inject(Router);
   private readonly logementService = inject(LogementService);
   private readonly reservationService = inject(ReservationService);
+  private readonly avisService = inject(AvisService);
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly snackBar = inject(MatSnackBar);
@@ -97,6 +104,23 @@ export class LogementDetailComponent implements OnInit {
 
   readonly suppressionEnCours = signal(false);
 
+  readonly avis = signal<Avis[]>([]);
+  readonly chargementAvis = signal(true);
+  readonly noteChoisie = signal(0);
+  readonly commentaireAvis = signal('');
+  readonly envoiAvisEnCours = signal(false);
+  readonly erreurAvis = signal<string | null>(null);
+
+  readonly dejaNote = computed(() => {
+    const utilisateur = this.authService.utilisateur();
+    if (!utilisateur) {
+      return false;
+    }
+    return this.avis().some((a) => a.voyageur.id === utilisateur.id);
+  });
+
+  readonly peutNoter = computed(() => this.estConnecte() && !this.estProprietaire() && !this.dejaNote());
+
   ngOnInit(): void {
     const id = Number(this.route.snapshot.paramMap.get('id'));
     this.logementService.obtenir(id).subscribe({
@@ -105,6 +129,14 @@ export class LogementDetailComponent implements OnInit {
         this.chargement.set(false);
       },
       error: () => this.chargement.set(false)
+    });
+
+    this.avisService.lister(id).subscribe({
+      next: (avis) => {
+        this.avis.set(avis);
+        this.chargementAvis.set(false);
+      },
+      error: () => this.chargementAvis.set(false)
     });
   }
 
@@ -210,6 +242,37 @@ export class LogementDetailComponent implements OnInit {
         );
       }
     });
+  }
+
+  envoyerAvis(): void {
+    const logement = this.logement();
+    if (!logement || this.noteChoisie() < 1) {
+      return;
+    }
+
+    this.envoiAvisEnCours.set(true);
+    this.erreurAvis.set(null);
+
+    this.avisService
+      .creer(logement.id, { note: this.noteChoisie(), commentaire: this.commentaireAvis().trim() || undefined })
+      .subscribe({
+        next: (nouvelAvis) => {
+          this.envoiAvisEnCours.set(false);
+          this.avis.update((liste) => [nouvelAvis, ...liste]);
+          const nombreAvis = (logement.nombreAvis ?? 0) + 1;
+          const noteMoyenne = ((logement.noteMoyenne ?? 0) * (logement.nombreAvis ?? 0) + nouvelAvis.note) / nombreAvis;
+          this.logement.set({ ...logement, nombreAvis, noteMoyenne });
+          this.noteChoisie.set(0);
+          this.commentaireAvis.set('');
+          this.snackBar.open('Merci pour votre avis !', 'Fermer', { duration: 3000 });
+        },
+        error: (err: any) => {
+          this.envoiAvisEnCours.set(false);
+          this.erreurAvis.set(
+            err.error?.message ?? "Impossible d'envoyer votre avis pour le moment"
+          );
+        }
+      });
   }
 
   private formatDate(date: Date): string {

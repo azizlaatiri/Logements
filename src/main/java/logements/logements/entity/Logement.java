@@ -73,4 +73,22 @@ public class Logement {
     @JsonIgnore
     @OneToMany(mappedBy = "logement", cascade = CascadeType.ALL)
     private List<Indisponibilite> indisponibilites = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "logement", cascade = CascadeType.ALL)
+    private List<Avis> avis = new ArrayList<>();
+
+    public Double getNoteMoyenne() {
+        // avis peut etre null pour un logement fraichement desserialise depuis une requete
+        // (Jackson utilise le constructeur @AllArgsConstructor et ne connait pas ce champ
+        // ignore, donc il passe null au lieu de l'initialiseur par defaut).
+        if (avis == null || avis.isEmpty()) {
+            return null;
+        }
+        return avis.stream().mapToInt(Avis::getNote).average().orElse(0);
+    }
+
+    public int getNombreAvis() {
+        return avis == null ? 0 : avis.size();
+    }
 }

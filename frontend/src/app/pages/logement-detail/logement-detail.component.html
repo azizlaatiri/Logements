@@ -6,7 +6,15 @@
 } @else {
   @if (logement(); as logement) {
     <h1 class="titre-page">{{ logement.titre }}</h1>
-    <p class="sous-titre-page">{{ logement.ville }} @if (logement.pays) { , {{ logement.pays }} } @if (logement.adresse) { · {{ logement.adresse }} }</p>
+    <div class="ligne-sous-titre">
+      <p class="sous-titre-page">{{ logement.ville }} @if (logement.pays) { , {{ logement.pays }} } @if (logement.adresse) { · {{ logement.adresse }} }</p>
+      @if (logement.nombreAvis) {
+        <span class="note-page">
+          <app-etoiles [note]="logement.noteMoyenne ?? 0" taille="petite" />
+          {{ logement.noteMoyenne?.toFixed(1) }} · {{ logement.nombreAvis }} avis
+        </span>
+      }
+    </div>
 
     @if (galeriePhotos().length === 0) {
       <div class="image-hero">
@@ -49,6 +57,62 @@
           <div class="separateur-horizontal"></div>
           <p class="description">{{ logement.description }}</p>
         }
+
+        <div class="separateur-horizontal"></div>
+        <div class="section-avis">
+          <h2 class="titre-section-avis">
+            @if (logement.nombreAvis) {
+              <app-etoiles [note]="logement.noteMoyenne ?? 0" />
+              {{ logement.noteMoyenne?.toFixed(1) }} · {{ logement.nombreAvis }} avis
+            } @else {
+              Aucun avis pour le moment
+            }
+          </h2>
+
+          @if (peutNoter()) {
+            <div class="formulaire-avis">
+              <p class="etiquette-formulaire-avis">Laisser un avis</p>
+              <app-etoiles [note]="noteChoisie()" [interactif]="true" (noteChange)="noteChoisie.set($event)" />
+              <textarea
+                class="champ-commentaire"
+                rows="3"
+                placeholder="Partagez votre expérience (facultatif)"
+                [value]="commentaireAvis()"
+                (input)="commentaireAvis.set($any($event.target).value)"
+              ></textarea>
+              @if (erreurAvis()) {
+                <p class="message-erreur">{{ erreurAvis() }}</p>
+              }
+              <button
+                type="button"
+                class="bouton-airbnb bouton-envoyer-avis"
+                [disabled]="noteChoisie() < 1 || envoiAvisEnCours()"
+                (click)="envoyerAvis()"
+              >
+                {{ envoiAvisEnCours() ? 'Envoi...' : "Envoyer l'avis" }}
+              </button>
+            </div>
+          }
+
+          @if (!chargementAvis() && avis().length > 0) {
+            <div class="liste-avis">
+              @for (a of avis(); track a.id) {
+                <div class="carte-avis">
+                  <div class="entete-avis">
+                    <span class="avatar-avis">{{ a.voyageur.prenom.charAt(0) }}</span>
+                    <div>
+                      <p class="nom-avis">{{ a.voyageur.prenom }} {{ a.voyageur.nom }}</p>
+                      <app-etoiles [note]="a.note" taille="petite" />
+                    </div>
+                  </div>
+                  @if (a.commentaire) {
+                    <p class="commentaire-avis">{{ a.commentaire }}</p>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
       </div>
 
       <div class="colonne-reservation">
@@ -121,7 +185,7 @@
                 <p class="message-erreur">{{ erreur() }}</p>
               }
 
-              <button type="submit" class="bouton-airbnb champ-pleine-largeur bouton-reserver" [disabled]="formulaire.invalid || enCoursReservation()">
+              <button type="submit" class="bouton-airbnb champ-pleine-largeur bouton-reserver" appSpotlight [disabled]="formulaire.invalid || enCoursReservation()">
                 {{ estConnecte() ? (recurrenceActivee() ? 'Réserver toutes les occurrences' : 'Réserver') : 'Se connecter pour réserver' }}
               </button>
 

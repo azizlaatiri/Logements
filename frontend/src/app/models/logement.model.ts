@@ -13,6 +13,8 @@ export interface Logement {
   imageUrl?: string;
   photos?: string[];
   proprietaire?: Utilisateur;
+  noteMoyenne?: number | null;
+  nombreAvis?: number;
 }
 
 export interface NouveauLogement {

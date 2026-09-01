@@ -12,6 +12,9 @@ import { LISTE_PAYS } from '../../data/pays';
 import { CriteresRecherche, LogementService } from '../../core/logement.service';
 import { GeocodageService, SuggestionLieu } from '../../core/geocodage.service';
 import { Logement } from '../../models/logement.model';
+import { RevealDirective } from '../../shared/reveal.directive';
+import { SpotlightDirective } from '../../shared/spotlight.directive';
+import { EtoilesComponent } from '../../shared/etoiles/etoiles.component';
 
 @Component({
   selector: 'app-accueil',
@@ -23,7 +26,10 @@ import { Logement } from '../../models/logement.model';
     MatAutocompleteModule,
     MatDatepickerModule,
     MatNativeDateModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    RevealDirective,
+    SpotlightDirective,
+    EtoilesComponent
   ],
   templateUrl: './accueil.component.html',
   styleUrl: './accueil.component.scss'
