@@ -28,15 +28,21 @@ public class ReservationService {
     private final LogementRepository logementRepository;
     private final UtilisateurRepository utilisateurRepository;
     private final IndisponibiliteRepository indisponibiliteRepository;
+    private final PaiementService paiementService;
+    private final EmailService emailService;
 
     public ReservationService(ReservationRepository reservationRepository,
                                LogementRepository logementRepository,
                                UtilisateurRepository utilisateurRepository,
-                               IndisponibiliteRepository indisponibiliteRepository) {
+                               IndisponibiliteRepository indisponibiliteRepository,
+                               PaiementService paiementService,
+                               EmailService emailService) {
         this.reservationRepository = reservationRepository;
         this.logementRepository = logementRepository;
         this.utilisateurRepository = utilisateurRepository;
         this.indisponibiliteRepository = indisponibiliteRepository;
+        this.paiementService = paiementService;
+        this.emailService = emailService;
     }
 
     public List<Reservation> findByUtilisateur(Long utilisateurId) {
@@ -66,7 +72,9 @@ public class ReservationService {
         verifierEligibiliteVoyageur(logement, voyageur);
         verifierDisponibilite(logement, demande.getDateDebut(), demande.getDateFin());
 
-        return creerReservation(logement, voyageur, demande.getDateDebut(), demande.getDateFin(), null);
+        Reservation reservation = creerReservation(logement, voyageur, demande.getDateDebut(), demande.getDateFin(), null);
+        notifierHote(logement, demande.getDateDebut(), demande.getDateFin());
+        return reservation;
     }
 
     @Transactional
@@ -86,9 +94,11 @@ public class ReservationService {
         }
 
         String groupeRecurrenceId = UUID.randomUUID().toString();
-        return occurrences.stream()
+        List<Reservation> reservations = occurrences.stream()
                 .map(occurrence -> creerReservation(logement, voyageur, occurrence[0], occurrence[1], groupeRecurrenceId))
                 .toList();
+        notifierHote(logement, occurrences.get(0)[0], occurrences.get(occurrences.size() - 1)[1]);
+        return reservations;
     }
 
     private void verifierEligibiliteVoyageur(Logement logement, Utilisateur voyageur) {
@@ -113,6 +123,15 @@ public class ReservationService {
         if (chevauchementBlocage) {
             throw new ConflitException("Le logement n'est pas disponible sur cette période, bloqué par l'hôte (" + dateDebut + " - " + dateFin + ")");
         }
+    }
+
+    private void notifierHote(Logement logement, LocalDate dateDebut, LocalDate dateFin) {
+        Utilisateur proprietaire = logement.getProprietaire();
+        if (proprietaire == null) {
+            return;
+        }
+        emailService.envoyerNotificationNouvelleReservation(
+                proprietaire.getEmail(), proprietaire.getPrenom(), logement.getTitre(), dateDebut, dateFin);
     }
 
     private Reservation creerReservation(Logement logement, Utilisateur voyageur, LocalDate dateDebut, LocalDate dateFin, String groupeRecurrenceId) {
@@ -148,6 +167,7 @@ public class ReservationService {
         return reservationRepository.save(reservation);
     }
 
+    @Transactional
     public Reservation annuler(Long reservationId, String emailUtilisateur) {
         Reservation reservation = reservationRepository.findById(reservationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Réservation introuvable: " + reservationId));
@@ -160,6 +180,7 @@ public class ReservationService {
             throw new AccessDeniedException(
                     "Vous ne pouvez annuler que vos propres réservations ou celles de vos logements");
         }
+        paiementService.rembourser(reservation);
         reservation.setStatut(StatutReservation.ANNULEE);
         return reservationRepository.save(reservation);
     }

@@ -3,6 +3,7 @@ import { Logement } from './logement.model';
 import { Utilisateur } from './utilisateur.model';
 
 export type StatutReservation = 'EN_ATTENTE' | 'CONFIRMEE' | 'ANNULEE';
+export type StatutPaiement = 'NON_PAYE' | 'PAYE' | 'REMBOURSE';
 
 export interface Reservation {
   id: number;
@@ -12,6 +13,7 @@ export interface Reservation {
   dateFin: string;
   prixTotal: number;
   statut: StatutReservation;
+  statutPaiement: StatutPaiement;
   dateCreation: string;
   groupeRecurrenceId?: string;
 }

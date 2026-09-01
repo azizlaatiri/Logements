@@ -28,18 +28,11 @@
   padding: 16px;
   border: 1px solid var(--airbnb-bordure-claire);
   border-radius: var(--airbnb-rayon-lg);
-  animation: entreeFondu 0.4s var(--anim-easing) both;
   transition: box-shadow var(--anim-normale), transform var(--anim-normale);
 
   &:hover {
     box-shadow: var(--airbnb-ombre-carte);
     transform: translateY(-2px);
-  }
-
-  @for $i from 1 through 10 {
-    &:nth-child(#{$i}) {
-      animation-delay: #{$i * 0.05}s;
-    }
   }
 
   @media (max-width: 560px) {
@@ -117,18 +110,33 @@
 }
 
 .badge-confirmee {
-  background: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
+  background: var(--couleur-succes-bg);
+  color: var(--couleur-succes-texte);
 }
 
 .badge-annulee {
-  background: rgba(239, 68, 68, 0.15);
-  color: #f87171;
+  background: var(--couleur-erreur-bg);
+  color: var(--couleur-erreur-texte);
 }
 
 .badge-en_attente {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
+  background: var(--couleur-attente-bg);
+  color: var(--couleur-attente-texte);
+}
+
+.badge-paiement-paye {
+  background: var(--couleur-succes-bg);
+  color: var(--couleur-succes-texte);
+}
+
+.badge-paiement-non_paye {
+  background: var(--couleur-info-bg);
+  color: var(--couleur-info-texte);
+}
+
+.badge-paiement-rembourse {
+  background: var(--couleur-accent-bg);
+  color: var(--couleur-accent-texte);
 }
 
 .ville-reservation {
@@ -146,8 +154,14 @@
   font-weight: 600;
 }
 
-.lien-annuler {
+.actions-reservation {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-top: 10px;
+}
+
+.lien-annuler {
   background: none;
   border: none;
   color: var(--airbnb-texte);
@@ -161,5 +175,29 @@
 
   &:hover {
     color: var(--airbnb-rouge);
+  }
+}
+
+.bouton-payer {
+  background: var(--airbnb-degrade);
+  color: #fff;
+  border: none;
+  border-radius: var(--airbnb-rayon-pilule);
+  padding: 8px 18px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: filter var(--anim-rapide), transform var(--anim-rapide), box-shadow var(--anim-rapide);
+
+  &:hover:not(:disabled) {
+    filter: brightness(1.12);
+    transform: translateY(-1px);
+    box-shadow: var(--airbnb-ombre-survol);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
   }
 }

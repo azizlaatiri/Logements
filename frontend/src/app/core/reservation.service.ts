@@ -34,4 +34,8 @@ export class ReservationService {
   confirmer(id: number): Observable<Reservation> {
     return this.http.patch<Reservation>(`${environment.apiUrl}/reservations/${id}/confirmer`, {});
   }
+
+  payer(id: number): Observable<{ url: string }> {
+    return this.http.post<{ url: string }>(`${environment.apiUrl}/reservations/${id}/paiement`, {});
+  }
 }

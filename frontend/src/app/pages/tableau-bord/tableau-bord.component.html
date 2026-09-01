@@ -9,8 +9,8 @@
     <p class="aucun-resultat">Vous n'avez aucune réservation. <a routerLink="/">Découvrir des logements</a></p>
   } @else {
     <div class="liste-reservations">
-      @for (r of reservations(); track r.id) {
-        <div class="carte-reservation">
+      @for (r of reservations(); track r.id; let i = $index) {
+        <div class="carte-reservation" [appReveal]="i">
           <div class="image-reservation">
             @if (r.logement.imageUrl) {
               <img [src]="r.logement.imageUrl" [alt]="r.logement.titre" />
@@ -25,14 +25,31 @@
             <div class="entete-reservation">
               <a [routerLink]="['/logements', r.logement.id]" class="titre-reservation">{{ r.logement.titre }}</a>
               <span class="badge" [class]="'badge-' + r.statut.toLowerCase()">{{ r.statut }}</span>
+              @if (r.statut === 'CONFIRMEE' || r.statutPaiement === 'REMBOURSE') {
+                <span class="badge" [class]="'badge-paiement-' + r.statutPaiement.toLowerCase()">
+                  {{ libellePaiement(r.statutPaiement) }}
+                </span>
+              }
             </div>
             <p class="ville-reservation">{{ r.logement.ville }}</p>
             <p class="dates-reservation">{{ r.dateDebut }} → {{ r.dateFin }}</p>
             <p class="prix-reservation">{{ r.prixTotal }} € au total</p>
 
-            @if (r.statut !== 'ANNULEE') {
-              <button type="button" class="lien-annuler" (click)="annuler(r)">Annuler la réservation</button>
-            }
+            <div class="actions-reservation">
+              @if (r.statut === 'CONFIRMEE' && r.statutPaiement === 'NON_PAYE') {
+                <button
+                  type="button"
+                  class="bouton-payer"
+                  (click)="payer(r)"
+                  [disabled]="paiementEnCours() === r.id"
+                >
+                  {{ paiementEnCours() === r.id ? 'Redirection...' : 'Payer maintenant' }}
+                </button>
+              }
+              @if (r.statut !== 'ANNULEE') {
+                <button type="button" class="lien-annuler" (click)="annuler(r)">Annuler la réservation</button>
+              }
+            </div>
           </div>
         </div>
       }

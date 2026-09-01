@@ -40,6 +40,13 @@ public class Reservation {
     @Enumerated(EnumType.STRING)
     private StatutReservation statut;
 
+    @Enumerated(EnumType.STRING)
+    private StatutPaiement statutPaiement;
+
+    private String stripeSessionId;
+
+    private String stripePaymentIntentId;
+
     private LocalDateTime dateCreation;
 
     private String groupeRecurrenceId;
@@ -51,6 +58,9 @@ public class Reservation {
         }
         if (statut == null) {
             statut = StatutReservation.EN_ATTENTE;
+        }
+        if (statutPaiement == null) {
+            statutPaiement = StatutPaiement.NON_PAYE;
         }
     }
 }
