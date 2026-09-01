@@ -18,6 +18,27 @@ html {
   );
 }
 
+// Theme clair : applique quand ThemeService pose data-theme="light" sur <html>.
+// Redefinit le meme jeu de variables + un second theme Material scope a ce selecteur,
+// c'est le mecanisme recommande par Angular Material pour un choix de theme au runtime.
+html[data-theme='light'] {
+  color-scheme: light;
+  @include mat.theme(
+    (
+      color: (
+        theme-type: light,
+        primary: mat.$violet-palette,
+        tertiary: mat.$rose-palette
+      ),
+      typography: (
+        plain-family: '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif',
+        brand-family: '-apple-system, BlinkMacSystemFont, "Helvetica Neue", Helvetica, Arial, sans-serif'
+      ),
+      density: 0
+    )
+  );
+}
+
 :root {
   --airbnb-rouge: #a855f7;
   --airbnb-rouge-fonce: #ec4899;
@@ -36,9 +57,70 @@ html {
   --airbnb-fond: #0d0c15;
   --airbnb-surface: rgba(255, 255, 255, 0.045);
   --airbnb-surface-forte: rgba(255, 255, 255, 0.09);
+  --airbnb-halo-1: rgba(139, 92, 246, 0.32);
+  --airbnb-halo-2: rgba(236, 72, 153, 0.24);
+  --airbnb-halo-3: rgba(99, 102, 241, 0.22);
+  --airbnb-selection-bg: rgba(168, 85, 247, 0.35);
+  --airbnb-selection-texte: #ffffff;
+  --airbnb-spotlight: rgba(255, 255, 255, 0.14);
+  --airbnb-panneau: #16141f;
+  --airbnb-entete: rgba(13, 12, 21, 0.72);
+  --airbnb-entete-defile: rgba(13, 12, 21, 0.9);
   --anim-easing: cubic-bezier(0.22, 1, 0.36, 1);
   --anim-rapide: 0.18s var(--anim-easing);
   --anim-normale: 0.28s var(--anim-easing);
+
+  // Couleurs semantiques (badges de statut, messages), communes aux deux themes
+  // pour le degrade/les tons, mais avec un contraste adapte a chaque fond.
+  --couleur-succes-bg: rgba(34, 197, 94, 0.15);
+  --couleur-succes-texte: #4ade80;
+  --couleur-erreur-bg: rgba(239, 68, 68, 0.15);
+  --couleur-erreur-texte: #f87171;
+  --couleur-attente-bg: rgba(245, 158, 11, 0.15);
+  --couleur-attente-texte: #fbbf24;
+  --couleur-info-bg: rgba(168, 85, 247, 0.15);
+  --couleur-info-texte: #c4b5fd;
+  --couleur-accent-bg: rgba(56, 189, 248, 0.15);
+  --couleur-accent-texte: #7dd3fc;
+  --couleur-etoile: #fbbf24;
+}
+
+html[data-theme='light'] {
+  --airbnb-rouge: #7c3aed;
+  --airbnb-rouge-fonce: #db2777;
+  --airbnb-texte: #1c1a26;
+  --airbnb-texte-clair: #6b6478;
+  --airbnb-bordure: rgba(28, 20, 45, 0.16);
+  --airbnb-bordure-claire: rgba(28, 20, 45, 0.09);
+  --airbnb-ombre-carte: 0 8px 24px rgba(28, 15, 60, 0.12);
+  --airbnb-ombre-legere: 0 2px 6px rgba(28, 15, 60, 0.08);
+  --airbnb-ombre-survol: 0 0 0 1px rgba(124, 58, 237, 0.25), 0 20px 40px rgba(124, 58, 237, 0.16);
+  --airbnb-degrade: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 45%, #db2777 100%);
+  --airbnb-teinte-claire: linear-gradient(135deg, rgba(124, 58, 237, 0.14) 0%, rgba(219, 39, 119, 0.14) 100%);
+  --airbnb-lavage-hero: radial-gradient(ellipse 900px 500px at 50% -20%, rgba(124, 58, 237, 0.16), transparent 65%);
+  --airbnb-fond: #faf9fc;
+  --airbnb-surface: rgba(255, 255, 255, 0.6);
+  --airbnb-surface-forte: rgba(28, 20, 45, 0.05);
+  --airbnb-halo-1: rgba(139, 92, 246, 0.16);
+  --airbnb-halo-2: rgba(219, 39, 119, 0.12);
+  --airbnb-halo-3: rgba(99, 102, 241, 0.1);
+  --airbnb-selection-bg: rgba(124, 58, 237, 0.18);
+  --airbnb-selection-texte: #1c1a26;
+  --airbnb-spotlight: rgba(124, 58, 237, 0.1);
+  --airbnb-panneau: #ffffff;
+  --airbnb-entete: rgba(255, 255, 255, 0.72);
+  --airbnb-entete-defile: rgba(255, 255, 255, 0.88);
+
+  --couleur-succes-bg: rgba(21, 128, 61, 0.12);
+  --couleur-succes-texte: #15803d;
+  --couleur-erreur-bg: rgba(185, 28, 28, 0.1);
+  --couleur-erreur-texte: #b91c1c;
+  --couleur-attente-bg: rgba(146, 64, 14, 0.12);
+  --couleur-attente-texte: #92400e;
+  --couleur-info-bg: rgba(109, 40, 217, 0.1);
+  --couleur-info-texte: #6d28d9;
+  --couleur-accent-bg: rgba(3, 105, 161, 0.1);
+  --couleur-accent-texte: #0369a1;
 }
 
 html, body { height: 100%; }
@@ -51,18 +133,39 @@ body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: var(--airbnb-texte);
+  background: var(--airbnb-fond);
+  position: relative;
+  transition: background-color var(--anim-normale), color var(--anim-normale);
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
-    radial-gradient(ellipse 900px 550px at 12% -8%, rgba(139, 92, 246, 0.28), transparent 60%),
-    radial-gradient(ellipse 800px 550px at 92% 8%, rgba(236, 72, 153, 0.2), transparent 60%),
-    radial-gradient(ellipse 1000px 700px at 50% 115%, rgba(99, 102, 241, 0.18), transparent 60%),
-    var(--airbnb-fond);
+    radial-gradient(ellipse 900px 550px at 12% -8%, var(--airbnb-halo-1), transparent 60%),
+    radial-gradient(ellipse 800px 550px at 92% 8%, var(--airbnb-halo-2), transparent 60%),
+    radial-gradient(ellipse 1000px 700px at 50% 115%, var(--airbnb-halo-3), transparent 60%);
   background-repeat: no-repeat;
-  background-attachment: fixed;
+  background-size: 130% 130%;
+  animation: deriveFond 24s ease-in-out infinite alternate;
+  transition: opacity var(--anim-normale);
+}
+
+@keyframes deriveFond {
+  from {
+    background-position: 0% 0%;
+  }
+  to {
+    background-position: 18% 12%;
+  }
 }
 
 ::selection {
-  background: rgba(168, 85, 247, 0.35);
-  color: #ffffff;
+  background: var(--airbnb-selection-bg);
+  color: var(--airbnb-selection-texte);
 }
 
 // Verre dépoli réutilisable pour cartes/panneaux flottants
@@ -150,6 +253,28 @@ body {
   &:hover {
     transform: translateY(-4px);
     box-shadow: var(--airbnb-ombre-survol);
+  }
+}
+
+// Halo qui suit le curseur, pose par SpotlightDirective (appSpotlight)
+.spotlight {
+  position: relative;
+  isolation: isolate;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    border-radius: inherit;
+    background: radial-gradient(circle 260px at var(--spot-x, 50%) var(--spot-y, 50%), var(--airbnb-spotlight), transparent 70%);
+    opacity: 0;
+    transition: opacity var(--anim-normale);
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    opacity: 1;
   }
 }
 
@@ -242,6 +367,16 @@ body {
   --mat-sys-surface-container-low: #16141f;
   --mat-sys-surface-container-high: #201d2d;
   --mat-sys-surface-container-highest: #262233;
+  --mat-sys-on-surface: var(--airbnb-texte);
+  --mat-sys-on-surface-variant: var(--airbnb-texte-clair);
+}
+
+html[data-theme='light'] body {
+  --mat-sys-surface: #ffffff;
+  --mat-sys-surface-container: #f4f2f9;
+  --mat-sys-surface-container-low: #ffffff;
+  --mat-sys-surface-container-high: #ece9f4;
+  --mat-sys-surface-container-highest: #e4e0f0;
   --mat-sys-on-surface: var(--airbnb-texte);
   --mat-sys-on-surface-variant: var(--airbnb-texte-clair);
 }

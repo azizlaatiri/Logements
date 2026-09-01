@@ -14,13 +14,18 @@
     <p class="aucun-resultat">Aucune réservation pour ce logement.</p>
   } @else {
     <div class="liste-reservations">
-      @for (r of reservations(); track r.id) {
-        <div class="carte-reservation">
+      @for (r of reservations(); track r.id; let i = $index) {
+        <div class="carte-reservation" [appReveal]="i">
           <div class="avatar-voyageur">{{ r.voyageur.prenom.charAt(0) }}</div>
           <div class="infos-reservation">
             <div class="entete-reservation">
               <span class="nom-voyageur">{{ r.voyageur.prenom }} {{ r.voyageur.nom }}</span>
               <span class="badge" [class]="'badge-' + r.statut.toLowerCase()">{{ r.statut }}</span>
+              @if (r.statut === 'CONFIRMEE' || r.statutPaiement === 'REMBOURSE') {
+                <span class="badge" [class]="'badge-paiement-' + r.statutPaiement.toLowerCase()">
+                  {{ libellePaiement(r.statutPaiement) }}
+                </span>
+              }
             </div>
             <p class="email-voyageur">{{ r.voyageur.email }}</p>
             <p class="dates-reservation">{{ r.dateDebut }} → {{ r.dateFin }}</p>

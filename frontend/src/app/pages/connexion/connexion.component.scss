@@ -17,7 +17,7 @@ form {
 }
 
 .message-erreur {
-  color: #f87171;
+  color: var(--couleur-erreur-texte);
   font-size: 0.9rem;
   margin: 0 0 8px;
 }

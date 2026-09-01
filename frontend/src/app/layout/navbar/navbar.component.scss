@@ -2,10 +2,18 @@
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(13, 12, 21, 0.72);
+  background: var(--airbnb-entete);
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--airbnb-bordure-claire);
+  transition: background var(--anim-normale), box-shadow var(--anim-normale), border-color var(--anim-normale);
+
+  &.entete-defilee {
+    background: var(--airbnb-entete-defile);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: var(--airbnb-ombre-carte);
+  }
 }
 
 .entete-contenu {
@@ -20,33 +28,80 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 8px;
   text-decoration: none;
-  font-weight: 800;
-  font-size: 1.4rem;
-  letter-spacing: -0.02em;
-  white-space: nowrap;
-  transition: transform var(--anim-rapide);
+  line-height: 0;
+}
 
-  span {
-    background: var(--airbnb-degrade);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+.logo-marque {
+  overflow: visible;
+  animation: logoFlotte 3.4s ease-in-out infinite;
+}
 
-  mat-icon {
-    color: var(--airbnb-rouge);
-    transition: transform var(--anim-normale);
+@keyframes logoFlotte {
+  0%, 100% {
+    transform: translateY(0);
   }
+  50% {
+    transform: translateY(-2.5px);
+  }
+}
 
-  &:hover {
-    transform: scale(1.04);
-  }
+.logo-toit {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transition: transform var(--anim-normale);
+}
 
-  &:hover mat-icon {
-    transform: rotate(-8deg);
+.logo-corps {
+  transition: filter var(--anim-normale);
+}
+
+.logo-porte {
+  fill: #16141f;
+  transform-box: fill-box;
+  transform-origin: left center;
+  transition: transform var(--anim-normale) 0.05s;
+}
+
+.logo-pastille {
+  fill: #ec4899;
+}
+
+.logo-anneau {
+  fill: none;
+  stroke: #ec4899;
+  stroke-width: 1.5;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: logoPing 2.2s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+@keyframes logoPing {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
   }
+  80%, 100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+.logo:hover .logo-marque {
+  animation-play-state: paused;
+  transform: translateY(-2px) scale(1.06);
+}
+
+.logo:hover .logo-toit {
+  transform: translateY(-1.5px) rotate(-2deg);
+}
+
+.logo:hover .logo-corps {
+  filter: brightness(1.15);
+}
+
+.logo:hover .logo-porte {
+  transform: rotateY(0deg) skewY(-18deg) scaleY(0.92) translateX(0.5px);
 }
 
 .liens-centre {
@@ -80,6 +135,51 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.bouton-theme {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  border: 1px solid var(--airbnb-bordure);
+  border-radius: 50%;
+  background: var(--airbnb-surface);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  box-shadow: var(--airbnb-ombre-legere);
+  transition: box-shadow var(--anim-rapide), transform var(--anim-rapide), background var(--anim-normale);
+  overflow: hidden;
+
+  &:hover {
+    box-shadow: var(--airbnb-ombre-survol);
+    transform: translateY(-1px) rotate(-8deg);
+  }
+
+  mat-icon {
+    color: var(--airbnb-rouge);
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.icone-theme {
+  animation: apparitionIcone 0.45s var(--anim-easing);
+}
+
+@keyframes apparitionIcone {
+  from {
+    opacity: 0;
+    transform: rotate(-100deg) scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: rotate(0) scale(1);
+  }
 }
 
 .menu-utilisateur {
@@ -135,7 +235,7 @@
   top: calc(100% + 12px);
   right: 0;
   min-width: 220px;
-  background: #16141f;
+  background: var(--airbnb-panneau);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 12px;
@@ -192,10 +292,10 @@
   gap: 16px;
   flex-wrap: wrap;
   padding: 10px 24px;
-  background: rgba(245, 158, 11, 0.1);
-  border-bottom: 1px solid rgba(245, 158, 11, 0.3);
+  background: var(--couleur-attente-bg);
+  border-bottom: 1px solid var(--couleur-attente-texte);
   font-size: 0.85rem;
-  color: #fbbf24;
+  color: var(--couleur-attente-texte);
   text-align: center;
   animation: glissementHaut 0.35s var(--anim-easing) both;
 
@@ -203,7 +303,7 @@
     flex-shrink: 0;
     width: 130px;
     padding: 4px 10px;
-    border: 1px solid rgba(245, 158, 11, 0.5);
+    border: 1px solid var(--couleur-attente-texte);
     border-radius: var(--airbnb-rayon-pilule);
     background: var(--airbnb-surface);
     color: var(--airbnb-texte);
@@ -214,25 +314,25 @@
 
     &:focus {
       outline: none;
-      border-color: #fbbf24;
+      border-color: var(--couleur-attente-texte);
     }
   }
 
   button {
     flex-shrink: 0;
     background: none;
-    border: 1px solid rgba(245, 158, 11, 0.5);
+    border: 1px solid var(--couleur-attente-texte);
     border-radius: var(--airbnb-rayon-pilule);
     padding: 4px 14px;
     font-weight: 600;
     font-size: 0.8rem;
-    color: #fbbf24;
+    color: var(--couleur-attente-texte);
     cursor: pointer;
     font-family: inherit;
     transition: background var(--anim-rapide);
 
     &:hover:not(:disabled) {
-      background: rgba(245, 158, 11, 0.18);
+      background: var(--couleur-attente-bg);
     }
 
     &:disabled {

@@ -1,7 +1,8 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { ThemeService } from '../../core/theme.service';
 
 @Component({
   selector: 'app-navbar',
@@ -13,11 +14,18 @@ import { AuthService } from '../../core/auth.service';
 export class NavbarComponent {
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  readonly themeService = inject(ThemeService);
 
   readonly utilisateur = this.authService.utilisateur;
   readonly estConnecte = this.authService.estConnecte;
   readonly estHote = this.authService.estHote;
   readonly menuOuvert = signal(false);
+  readonly defile = signal(false);
+
+  @HostListener('window:scroll')
+  surDefilement(): void {
+    this.defile.set(window.scrollY > 8);
+  }
 
   readonly emailNonVerifie = computed(() => this.estConnecte() && this.utilisateur()?.emailVerifie === false);
 
